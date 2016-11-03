@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Git Issues</string>
+
+    <string name="tab_recents">Recents</string>
+    <string name="tab_repositories">Repos</string>
+    <string name="tab_pullrequests">Pull Requests</string>
+
 </resources>

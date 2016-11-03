@@ -3,6 +3,7 @@ package com.ftinc.gitissues.api
 import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * Created by r0adkll on 11/2/16.
@@ -19,8 +20,8 @@ interface GithubAPI {
     @GET("users/{user}/repos")
     fun getUserRepositories(@Path("user") user: String) : Observable<List<Repository>>
 
-    @GET("issues")
-    fun getAllIssues() : Observable<List<Issue>>
+    @GET("issues?sort=updated")
+    fun getAllIssues(@Query("filter") filter: String?) : Observable<List<Issue>>
 
     @GET("repos/{owner}/{repo}/issues")
     fun getIssues(@Path("owner") owner: String,
@@ -57,7 +58,19 @@ interface GithubAPI {
                      @Path("repo") repo: String) : Observable<List<User>>
 
 
+    /***********************************************************************************************
+     *
+     * Search APIs
+     *
+     */
 
+    class SearchResult<out T>(val total_count: Int,
+                              val incomplete_results: Boolean,
+                              val items: List<T>)
 
+    @GET("search/issues")
+    fun searchIssues(@Query("q") query: String,
+                     @Query("sort") sort: String?,
+                     @Query("order") order: String?) : Observable<SearchResult<Issue>>
 
 }
