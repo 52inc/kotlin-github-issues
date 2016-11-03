@@ -1,5 +1,8 @@
 package com.ftinc.gitissues.api
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 /**
  * User Model
  */
@@ -130,3 +133,8 @@ data class Event(val id: Long,
                  val assignee: User?,
                  val assigner: User?,
                  val milestone: Milestone?)
+
+/**
+ * Extension function to convert Github date strings into java date objects
+ */
+fun String.toGithubDate(): Date = SimpleDateFormat("YYYY-MM-DDTHH:MM:SSZ", Locale.US).parse(this)
