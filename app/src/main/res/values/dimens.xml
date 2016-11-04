@@ -9,6 +9,8 @@
     <dimen name="normal_padding">16dp</dimen>
     <dimen name="small_padding">8dp</dimen>
     <dimen name="tiny_padding">4dp</dimen>
+
     <dimen name="avatar_small_dimen">32dp</dimen>
+    <dimen name="editor_action">56dp</dimen>
 
 </resources>

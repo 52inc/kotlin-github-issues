@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                xmlns:tools="http://schemas.android.com/tools"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:background="?attr/selectableItemBackground"
+    >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:gravity="center_vertical|start"
+        android:layout_marginTop="@dimen/normal_padding"
+        android:layout_marginStart="@dimen/normal_padding"
+        android:layout_marginEnd="@dimen/normal_padding"
+        android:layout_marginBottom="@dimen/normal_padding"
+
+        tools:text="52inc/Scoops"
+        android:textSize="18sp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:fontFamily="sans-serif-medium"
+
+        android:drawableStart="@drawable/ic_lock_black_24dp"
+        android:drawablePadding="@dimen/small_padding"
+        />
+
+    <com.ftinc.gitissues.ui.widget.LabelView
+        android:id="@+id/label_private"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_toEndOf="@id/title"
+        android:layout_marginTop="@dimen/normal_padding"
+
+        android:text="@string/label_private"
+        android:textSize="12sp"
+        android:fontFamily="sans-serif-medium"
+        app:lv_color="@color/colorAccent"
+        />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/title"
+        android:layout_marginStart="@dimen/normal_padding"
+        android:layout_marginEnd="@dimen/normal_padding"
+        android:layout_marginBottom="@dimen/normal_padding"
+
+        tools:text="So when I click the button, it just explodes. No warning. No crash. Phone literally exploded, Galaxy Note 7 style."
+        android:textColor="?android:attr/textColorSecondary"
+        />
+
+    <!--
+
+        Assignee Information
+
+    -->
+
+    <com.ftinc.kit.widget.BezelImageView
+        android:id="@+id/owner_avatar"
+        android:layout_width="@dimen/avatar_small_dimen"
+        android:layout_height="@dimen/avatar_small_dimen"
+
+        android:layout_marginStart="@dimen/normal_padding"
+        android:layout_marginBottom="@dimen/normal_padding"
+        android:layout_below="@+id/attributes"
+
+        tools:src="@color/grey_300"
+        app:maskDrawable="@drawable/dr_mask_round_rect"
+        />
+
+    <TextView
+        android:id="@+id/owner_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:gravity="center_vertical|start"
+        android:layout_toEndOf="@+id/owner_avatar"
+        android:layout_alignBottom="@+id/owner_avatar"
+        android:layout_marginStart="@dimen/normal_padding"
+
+        tools:text="r0adkll"
+        android:textColor="?android:attr/textColorSecondary"
+        />
+
+    <TextView
+        android:id="@+id/updated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:gravity="center_vertical|start"
+        android:layout_toEndOf="@+id/owner_name"
+        android:layout_alignBottom="@+id/owner_avatar"
+        android:layout_marginStart="@dimen/tiny_padding"
+
+        tools:text="5 mins ago"
+        android:textColor="@color/black26"
+        android:textSize="12sp"
+        />
+
+    <!--
+
+        Items
+
+    -->
+
+    <LinearLayout
+        android:id="@+id/attributes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+
+        android:layout_below="@id/description"
+        android:layout_marginStart="@dimen/normal_padding"
+        android:layout_marginEnd="@dimen/normal_padding"
+        android:layout_marginBottom="@dimen/normal_padding"
+        >
+
+        <TextView
+            android:id="@+id/watchers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+
+            tools:text="80"
+            android:textColor="?android:attr/textColorPrimary"
+            android:drawableEnd="@drawable/ic_remove_red_eye_black_24dp"
+            android:drawablePadding="@dimen/tiny_padding"
+            />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/stars"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:layout_marginStart="@dimen/normal_padding"
+
+            tools:text="1,111"
+            android:textColor="?android:attr/textColorPrimary"
+            android:drawableEnd="@drawable/ic_star_black_24dp"
+            android:drawablePadding="@dimen/tiny_padding"
+            />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/issues"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:layout_marginStart="@dimen/normal_padding"
+
+            tools:text="30"
+            android:textColor="?android:attr/textColorPrimary"
+            android:drawableEnd="@drawable/ic_info_outline_black_24dp"
+            android:drawablePadding="@dimen/tiny_padding"
+            />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/forks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:gravity="center"
+            android:layout_marginStart="@dimen/normal_padding"
+
+            tools:text="1000"
+            android:textColor="?android:attr/textColorPrimary"
+            android:drawableEnd="@drawable/ic_source_fork"
+            android:drawablePadding="@dimen/tiny_padding"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

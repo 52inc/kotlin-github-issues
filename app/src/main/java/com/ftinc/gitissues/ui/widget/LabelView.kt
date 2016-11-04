@@ -23,6 +23,11 @@ import com.ftinc.gitissues.util.drawable
 class LabelView : TextView{
 
     var labelColor: Int = color(R.color.grey_500)
+        get() = field
+        set(value) {
+            field = value
+            background?.setColorFilter(value, PorterDuff.Mode.SRC_ATOP)
+        }
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)

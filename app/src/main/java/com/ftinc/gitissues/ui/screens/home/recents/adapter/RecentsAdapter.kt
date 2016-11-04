@@ -1,5 +1,6 @@
 package com.ftinc.gitissues.ui.screens.home.recents.adapter
 
+import `in`.uncod.android.bypass.Bypass
 import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -16,25 +17,22 @@ class RecentsAdapter
 /**
  * Constructor
  */
-(activity: Activity) : BetterRecyclerAdapter<Issue, RecyclerView.ViewHolder>() {
+(activity: Activity) : BetterRecyclerAdapter<Issue, IssueViewHolder>() {
 
-    protected var inflater: LayoutInflater
+    private var inflater: LayoutInflater
+    private val bypass: Bypass = Bypass(activity, Bypass.Options())
 
     init {
         inflater = activity.layoutInflater
-
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): RecyclerView.ViewHolder {
-        return LatestIssueViewHolder.create(inflater, parent)
+    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): IssueViewHolder {
+        return IssueViewHolder.create(inflater, parent)
     }
 
-    override fun onBindViewHolder(vh: RecyclerView.ViewHolder?, i: Int) {
+    override fun onBindViewHolder(vh: IssueViewHolder?, i: Int) {
         super.onBindViewHolder(vh, i)
-
+        vh?.bind(getItem(i), bypass)
     }
 
-//    override fun getItemViewType(position: Int): Int {
-//        return delegateManager.getItemViewType(getItems(), position)
-//    }
 }

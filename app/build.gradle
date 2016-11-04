@@ -55,8 +55,12 @@ dependencies {
     compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
     compile 'com.jakewharton.timber:timber:4.1.2'
 
-    compile 'com.52inc:52Kit-core:0.4.5'
+    compile ('com.52inc:52Kit-core:0.4.5'){
+        exclude group:'com.jakewharton', module: 'butterknife'
+        exclude group: 'io.reactivex'
+    }
     compile 'com.hannesdorfmann:adapterdelegates3:3.0.0'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 
     compile 'com.google.dagger:dagger:2.7'
     kapt 'com.google.dagger:dagger-compiler:2.7'
@@ -65,8 +69,9 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.0'
 
     compile 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
-
     compile 'com.google.firebase:firebase-auth:9.8.0'
+
+    compile project(':bypass')
 
 
 }

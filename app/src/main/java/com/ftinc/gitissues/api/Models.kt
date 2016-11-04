@@ -135,6 +135,34 @@ data class Event(val id: Long,
                  val milestone: Milestone?)
 
 /**
+ * Pull Request Model
+ */
+data class PullRequest(val id: Long,
+                       val number: Int,
+                       val state: String,
+                       val title: String,
+                       val body: String,
+                       val assignee: User?,
+                       val milestone: Milestone?,
+                       val locked: Boolean,
+                       val created_at: String,
+                       val updated_at: String,
+                       val closed_at: String?,
+                       val merged_at: String?,
+                       val head: Branch,
+                       val base: Branch,
+                       val user: User)
+
+/**
+ * Branch Representation Model
+ */
+data class Branch(val label: String,
+                  val ref: String,
+                  val sha: String,
+                  val user: User,
+                  val repo: Repository)
+
+/**
  * Extension function to convert Github date strings into java date objects
  */
-fun String.toGithubDate(): Date = SimpleDateFormat("YYYY-MM-DDTHH:MM:SSZ", Locale.US).parse(this)
+fun String.toGithubDate(): Date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).parse(this)

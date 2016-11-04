@@ -4,5 +4,6 @@
     <string name="tab_recents">Recents</string>
     <string name="tab_repositories">Repos</string>
     <string name="tab_pullrequests">Pull Requests</string>
+    <string name="label_private">Private</string>
 
 </resources>

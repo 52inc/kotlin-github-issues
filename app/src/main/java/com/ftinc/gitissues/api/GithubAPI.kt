@@ -14,13 +14,13 @@ interface GithubAPI {
     @GET("user")
     fun getUser() : Observable<User>
 
-    @GET("user/repos?per_page=100")
+    @GET("user/repos?per_page=100&affiliation=owner,collaborator")
     fun getRepositories() : Observable<List<Repository>>
 
     @GET("users/{user}/repos")
     fun getUserRepositories(@Path("user") user: String) : Observable<List<Repository>>
 
-    @GET("issues?sort=updated")
+    @GET("issues?sort=updated&state=all")
     fun getAllIssues(@Query("filter") filter: String?) : Observable<List<Issue>>
 
     @GET("repos/{owner}/{repo}/issues")
