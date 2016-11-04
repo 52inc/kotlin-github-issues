@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "/Users/r0adkll/Documents/Developer/Work Projects/kotlin-github-issues/third_party/bypass/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values/values.xml",
+        "outputFile": "/Users/drew.heavner/Documents/Projects/52inc/Workspace/kotlin-github-issues-client/third_party/bypass/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values/values.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 94
                 },
                 "from": {
-                    "file": "/Users/r0adkll/Documents/Developer/Work Projects/kotlin-github-issues/third_party/bypass/build/intermediates/bundles/debug/res/values/values.xml",
+                    "file": "/Users/drew.heavner/Documents/Projects/52inc/Workspace/kotlin-github-issues-client/third_party/bypass/build/intermediates/bundles/debug/res/values/values.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,

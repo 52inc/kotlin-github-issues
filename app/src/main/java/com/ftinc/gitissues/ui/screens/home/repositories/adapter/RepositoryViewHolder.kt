@@ -23,12 +23,10 @@ class RepositoryViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
     val title: TextView by bindView(R.id.title)
     val description: TextView by bindView(R.id.description)
-    val privateLabel: LabelView by bindView(R.id.label_private)
     val forks: TextView by bindView(R.id.forks)
     val ownerAvatar: BezelImageView by bindView(R.id.owner_avatar)
     val ownerName: TextView by bindView(R.id.owner_name)
     val updated: TextView by bindView(R.id.updated)
-    val watchers: TextView by bindView(R.id.watchers)
     val stars: TextView by bindView(R.id.stars)
     val issues: TextView by bindView(R.id.issues)
 
@@ -43,13 +41,11 @@ class RepositoryViewHolder(view: View) : RecyclerView.ViewHolder(view){
         description.text = repo.description
         forks.text = repo.forks_count.toString()
         ownerName.text = repo.owner.login
-        updated.text = repo.updated_at.toGithubDate().timeAgo()
-        watchers.text = repo.watchers_count.toString()
+        updated.text = repo.updated_at.toGithubDate()?.timeAgo()
         stars.text = repo.stargazers_count.toString()
         issues.text = repo.open_issues_count.toString()
         issues.setVisible(repo.has_issues)
 
-        privateLabel.setVisible(repo.private)
         title.setCompoundDrawablesRelativeWithIntrinsicBounds(if(repo.private) R.drawable.ic_lock_black_24dp else 0, 0, 0, 0)
 
         Glide.with(itemView.context)

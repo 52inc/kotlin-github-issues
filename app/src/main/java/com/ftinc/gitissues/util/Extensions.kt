@@ -30,4 +30,4 @@ fun View.setVisibleWeak(visible: Boolean) {
     this.visibility = if(visible) View.VISIBLE else View.INVISIBLE
 }
 
-fun Date.timeAgo(): String = TimeUtils.getTimeAgo(this.time)
+fun Date.timeAgo(): String? = TimeUtils.getTimeAgo(this.time)

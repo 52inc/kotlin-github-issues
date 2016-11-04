@@ -18,6 +18,8 @@
         android:textSize="18sp"
         android:textColor="?android:attr/textColorSecondary"
         android:textStyle="bold"
+
+        android:drawablePadding="@dimen/tiny_padding"
         />
 
     <TextView
@@ -61,85 +63,91 @@
 
     -->
 
-    <com.ftinc.kit.widget.BezelImageView
-        android:id="@+id/assignee_avatar"
-        android:layout_width="@dimen/avatar_small_dimen"
-        android:layout_height="@dimen/avatar_small_dimen"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        android:gravity="center_vertical|start"
 
         android:layout_marginStart="@dimen/normal_padding"
         android:layout_marginBottom="@dimen/normal_padding"
         android:layout_below="@+id/body"
+        >
 
-        tools:src="@color/grey_300"
-        app:maskDrawable="@drawable/dr_mask_round_rect"
-        />
+        <com.ftinc.kit.widget.BezelImageView
+            android:id="@+id/assignee_avatar"
+            android:layout_width="@dimen/avatar_small_dimen"
+            android:layout_height="@dimen/avatar_small_dimen"
 
-    <TextView
-        android:id="@+id/assignee_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            tools:src="@color/grey_300"
+            app:maskDrawable="@drawable/dr_mask_round_rect"
+            />
 
-        android:gravity="center_vertical|start"
-        android:layout_toEndOf="@+id/assignee_avatar"
-        android:layout_alignBottom="@+id/assignee_avatar"
-        android:layout_marginStart="@dimen/normal_padding"
+        <TextView
+            android:id="@+id/assignee_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-        tools:text="r0adkll"
-        android:textColor="?android:attr/textColorSecondary"
-        />
+            android:gravity="center_vertical|start"
+            android:layout_marginStart="@dimen/normal_padding"
 
-    <TextView
-        android:id="@+id/updated"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            tools:text="r0adkll"
+            android:textColor="?android:attr/textColorSecondary"
+            />
 
-        android:gravity="center_vertical|start"
-        android:layout_toEndOf="@+id/assignee_name"
-        android:layout_alignBottom="@+id/assignee_avatar"
-        android:layout_marginStart="@dimen/tiny_padding"
+        <TextView
+            android:id="@+id/updated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-        tools:text="5 mins ago"
-        android:textColor="@color/black26"
-        android:textSize="12sp"
-        />
+            android:gravity="center_vertical|start"
+            android:layout_marginStart="@dimen/tiny_padding"
 
-    <!--
+            tools:text="5 mins ago"
+            android:textColor="@color/black26"
+            android:textSize="12sp"
+            />
 
-        Label & extra Information
+        <!--
 
-    -->
+            Label & extra Information
 
-    <com.ftinc.gitissues.ui.widget.LabelView
-        android:id="@+id/status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        -->
 
-        android:layout_marginEnd="@dimen/normal_padding"
-        android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/assignee_avatar"
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
 
-        tools:text="OPEN"
-        android:fontFamily="sans-serif-medium"
-        app:lv_color="@color/green_500"
-        />
+        <TextView
+            android:id="@+id/comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
 
-    <TextView
-        android:id="@+id/comment_count"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+            android:layout_marginEnd="@dimen/normal_padding"
 
-        android:layout_toStartOf="@id/status"
-        android:layout_alignTop="@+id/status"
-        android:layout_alignBottom="@+id/status"
-        android:layout_marginEnd="@dimen/normal_padding"
+            tools:text="3"
+            android:textSize="16sp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="?android:attr/textColorSecondary"
+            android:drawableEnd="@drawable/ic_comment_text_outline"
+            android:drawablePadding="@dimen/tiny_padding"
+            />
 
-        tools:text="3"
-        android:textSize="16sp"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="?android:attr/textColorSecondary"
-        android:drawableEnd="@drawable/ic_comment_text_outline"
-        android:drawablePadding="@dimen/tiny_padding"
-        />
+        <com.ftinc.gitissues.ui.widget.LabelView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="@dimen/normal_padding"
+
+            tools:text="OPEN"
+            android:fontFamily="sans-serif-medium"
+            app:lv_color="@color/green_500"
+            />
+
+    </LinearLayout>
 
 </RelativeLayout>

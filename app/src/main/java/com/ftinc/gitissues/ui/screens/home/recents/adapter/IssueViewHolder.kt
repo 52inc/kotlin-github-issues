@@ -41,10 +41,13 @@ class IssueViewHolder(view: View) : RecyclerView.ViewHolder(view){
     }
 
     fun bind(issue: Issue, bypass: Bypass){
+
+        number.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, 0, if(issue.pull_request != null) R.drawable.ic_source_pull else 0)
+
         number.text = "#${issue.number}"
         title.text = issue.title
-        assigneeName.text = issue.assignee?.name
-        updated.text = issue.updated_at.toGithubDate().timeAgo()
+        assigneeName.text = issue.assignee?.login
+        updated.text = issue.updated_at?.toGithubDate()?.timeAgo()
 
         status.text = issue.state.toUpperCase()
         val clr: Int = if(issue.state.equals("open", true)) {

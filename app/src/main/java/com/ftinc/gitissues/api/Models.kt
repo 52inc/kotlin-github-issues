@@ -57,8 +57,11 @@ data class Issue(val id: Long,
                  val comments: Int,
                  val closed_at: String?,
                  val created_at: String,
-                 val updated_at: String,
-                 val closed_by: User?)
+                 val updated_at: String?,
+                 val closed_by: User?,
+                 val pull_request: PR?)
+
+data class PR(val url: String)
 
 /**
  * Label Model
@@ -165,4 +168,4 @@ data class Branch(val label: String,
 /**
  * Extension function to convert Github date strings into java date objects
  */
-fun String.toGithubDate(): Date = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).parse(this)
+fun String.toGithubDate(): Date? = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).parse(this)

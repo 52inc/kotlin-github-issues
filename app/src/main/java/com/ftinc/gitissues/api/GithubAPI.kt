@@ -57,6 +57,12 @@ interface GithubAPI {
     fun getAssignees(@Path("owner") owner: String,
                      @Path("repo") repo: String) : Observable<List<User>>
 
+    @GET("repos/{owner}/{repo}/pulls")
+    fun getPullRequests(@Path("owner") owner: String,
+                        @Path("repo") repo: String,
+                        @Query("state") state: String?,
+                        @Query("sort") sort: String?) : Observable<List<PullRequest>>
+
 
     /***********************************************************************************************
      *
@@ -72,5 +78,9 @@ interface GithubAPI {
     fun searchIssues(@Query("q") query: String,
                      @Query("sort") sort: String?,
                      @Query("order") order: String?) : Observable<SearchResult<Issue>>
+
+    @GET("search/issues?type=pr")
+    fun searchPullRequests(@Query("q") query: String,
+                           @Query("involves") involves: String) : Observable<SearchResult<Issue>>
 
 }
