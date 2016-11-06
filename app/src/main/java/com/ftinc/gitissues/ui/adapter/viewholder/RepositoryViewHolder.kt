@@ -1,4 +1,4 @@
-package com.ftinc.gitissues.ui.screens.home.repositories.adapter
+package com.ftinc.gitissues.ui.adapter.viewholder
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater

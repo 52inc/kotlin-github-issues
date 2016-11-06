@@ -1,5 +1,6 @@
 package com.ftinc.gitissues.api
 
+import com.squareup.moshi.Json
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -95,7 +96,19 @@ data class Comment(val id: Long,
                    val body: String,
                    val user: User,
                    val created_at: String,
-                   val updated_at: String)
+                   val updated_at: String?,
+                   val reactions: Reactions)
+
+/**
+ * Reactions Model
+ */
+data class Reactions(val total_count: Int,
+                     @Json(name = "+1") val plusOne: Int,
+                     @Json(name = "-1") val minusOne: Int,
+                     val laugh: Int,
+                     val confused: Int,
+                     val heart: Int,
+                     val hooray: Int)
 
 /**
  * Event Constants

@@ -5,5 +5,6 @@
     <string name="tab_repositories">Repos</string>
     <string name="tab_pullrequests">Pull Requests</string>
     <string name="label_private">Private</string>
+    <string name="opened_this_issue">opened this issue</string>
 
 </resources>

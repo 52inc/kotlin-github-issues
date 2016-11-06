@@ -13,6 +13,7 @@ import com.ftinc.gitissues.di.components.AppComponent
 import com.ftinc.gitissues.di.components.HasComponent
 import com.ftinc.gitissues.di.modules.ActivityModule
 import com.ftinc.gitissues.ui.BaseActivity
+import com.ftinc.gitissues.ui.screens.home.pullrequests.PullRequestsFragment
 import com.ftinc.gitissues.ui.screens.home.recents.RecentsFragment
 import com.ftinc.gitissues.ui.screens.home.repositories.ReposFragment
 
@@ -49,6 +50,8 @@ class HomeActivity: BaseActivity(), HasComponent<HomeComponent>{
 
         adapter = HomePagerAdapter(supportFragmentManager)
         pager.adapter = adapter
+        tabs.setupWithViewPager(pager)
+        pager.offscreenPageLimit = 2
 
         fab.setOnClickListener {
             // TODO: Implement circular expose of options similar to plaid
@@ -75,11 +78,21 @@ class HomeActivity: BaseActivity(), HasComponent<HomeComponent>{
             return when(position){
                 0 -> RecentsFragment()
                 1 -> ReposFragment()
+                2 -> PullRequestsFragment()
                 else -> null
             }
         }
 
-        override fun getCount(): Int = 2
+        override fun getCount(): Int = 3
+
+        override fun getPageTitle(position: Int): CharSequence {
+            return when(position){
+                0 -> getString(R.string.tab_recents)
+                1 -> getString(R.string.tab_repositories)
+                2 -> getString(R.string.tab_pullrequests)
+                else -> ""
+            }
+        }
     }
 
 }

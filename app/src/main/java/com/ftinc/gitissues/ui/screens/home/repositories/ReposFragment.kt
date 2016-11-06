@@ -13,7 +13,7 @@ import com.ftinc.gitissues.api.Repository
 import com.ftinc.gitissues.di.components.HasComponent
 import com.ftinc.gitissues.ui.BaseFragment
 import com.ftinc.gitissues.ui.screens.home.HomeComponent
-import com.ftinc.gitissues.ui.screens.home.repositories.adapter.ReposAdapter
+import com.ftinc.gitissues.ui.adapter.ReposAdapter
 import com.ftinc.kit.widget.EmptyView
 import javax.inject.Inject
 

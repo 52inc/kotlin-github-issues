@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    app:cardCornerRadius="2dp"
+    android:layout_marginStart="@dimen/normal_padding"
+    android:layout_marginEnd="@dimen/normal_padding"
+    android:layout_marginTop="@dimen/small_padding"
+    android:layout_marginBottom="@dimen/small_padding"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/normal_padding"
+            >
+
+            <com.ftinc.kit.widget.BezelImageView
+                android:id="@+id/owner_avatar"
+                android:layout_width="@dimen/avatar_small_dimen"
+                android:layout_height="@dimen/avatar_small_dimen"
+
+                tools:src="@color/grey_300"
+                app:maskDrawable="@drawable/dr_mask_round_rect"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="@dimen/small_padding">
+
+                <TextView
+                    android:id="@+id/owner_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    tools:text="r0adkll"
+                    android:textColor="?android:attr/textColorPrimary"
+                    android:fontFamily="sans-serif-medium"
+                    />
+
+                <TextView
+                    android:id="@+id/edited_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_toEndOf="@+id/owner_name"
+                    android:layout_marginStart="@dimen/tiny_padding"
+                    android:layout_alignTop="@+id/owner_name"
+                    android:layout_alignBottom="@+id/owner_name"
+                    android:gravity="center"
+
+                    tools:text="edited 3 days ago"
+                    android:textSize="12sp"
+                    android:textColor="@color/black26"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    />
+
+                <TextView
+                    android:id="@+id/comment_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/owner_name"
+
+                    tools:text="commented 3 days ago"
+                    android:textColor="?android:attr/textColorSecondary"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black12"
+            />
+
+        <TextView
+            android:id="@+id/body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:padding="@dimen/normal_padding"
+
+            tools:text="@string/placeholder_lorem_ipsum_long"
+            android:textColor="?android:attr/textColorPrimary"
+            />
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

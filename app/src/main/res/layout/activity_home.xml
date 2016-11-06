@@ -11,6 +11,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+
+            app:title="Parley"
+            />
+
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
@@ -56,6 +65,7 @@
         android:src="@drawable/ic_filter_alt"
         android:tint="@color/white"
         app:fabSize="normal"
+        app:layout_behavior="com.ftinc.gitissues.ui.widget.ScrollAwareFABBehavior"
         />
 
 </android.support.design.widget.CoordinatorLayout>

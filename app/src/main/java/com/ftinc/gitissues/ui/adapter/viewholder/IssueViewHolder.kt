@@ -1,4 +1,4 @@
-package com.ftinc.gitissues.ui.screens.home.recents.adapter
+package com.ftinc.gitissues.ui.adapter.viewholder
 
 import `in`.uncod.android.bypass.Bypass
 import android.support.v7.widget.RecyclerView

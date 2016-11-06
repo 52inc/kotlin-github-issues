@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:background="@color/white"
+              android:elevation="4dp">
+
+    <TextView android:id="@+id/text"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="@dimen/normal_padding"
+
+              tools:text="@string/placeholder_lorem_ipsum_long"
+              android:textSize="16sp"
+              android:textColor="?android:attr/textColorPrimary" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black12" />
+
+</LinearLayout>

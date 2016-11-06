@@ -1,9 +1,10 @@
-package com.ftinc.gitissues.ui.screens.home.repositories.adapter
+package com.ftinc.gitissues.ui.adapter
 
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.ftinc.gitissues.api.Repository
+import com.ftinc.gitissues.ui.adapter.viewholder.RepositoryViewHolder
 import com.ftinc.kit.adapter.BetterRecyclerAdapter
 
 /**

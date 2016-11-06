@@ -1,18 +1,17 @@
-package com.ftinc.gitissues.ui.screens.home.recents.adapter
+package com.ftinc.gitissues.ui.adapter
 
 import `in`.uncod.android.bypass.Bypass
 import android.app.Activity
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.ftinc.gitissues.api.Issue
+import com.ftinc.gitissues.ui.adapter.viewholder.IssueViewHolder
 import com.ftinc.kit.adapter.BetterRecyclerAdapter
-import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager
 
 /**
  * The Recents page delegate adapter
  */
-class RecentsAdapter
+class IssuesAdapter
 
 /**
  * Constructor

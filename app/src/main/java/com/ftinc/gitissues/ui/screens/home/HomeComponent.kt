@@ -2,6 +2,8 @@ package com.ftinc.gitissues.ui.screens.home
 
 import com.ftinc.gitissues.di.ActivityScope
 import com.ftinc.gitissues.di.modules.ActivityModule
+import com.ftinc.gitissues.ui.screens.home.pullrequests.PullRequestsComponent
+import com.ftinc.gitissues.ui.screens.home.pullrequests.PullRequestsModule
 import com.ftinc.gitissues.ui.screens.home.recents.RecentsComponent
 import com.ftinc.gitissues.ui.screens.home.recents.RecentsModule
 import com.ftinc.gitissues.ui.screens.home.repositories.ReposComponent
@@ -18,4 +20,5 @@ import dagger.Subcomponent
 interface HomeComponent{
     fun plus(module: RecentsModule): RecentsComponent
     fun plus(module: ReposModule): ReposComponent
+    fun plus(module: PullRequestsModule): PullRequestsComponent
 }

@@ -27,6 +27,21 @@ interface GithubAPI {
     fun getIssues(@Path("owner") owner: String,
                   @Path("repo") repo: String) : Observable<List<Issue>>
 
+    @GET("repos/{owner}/{repo}/issues/{number}/labels")
+    fun getLabelsOnIssue(@Path("owner") owner: String,
+                         @Path("repo") repo: String,
+                         @Path("number") issueNumber: Int) : Observable<List<Label>>
+
+    @GET("repos/{owner}/{repo}/issues/{number}/events")
+    fun getEventsOnIssue(@Path("owner") owner: String,
+                         @Path("repo") repo: String,
+                         @Path("number") issueNumber: Int) : Observable<List<Event>>
+
+    @GET("repos/{owner}/{repo}/issues/{number}/comments")
+    fun getCommentsOnIssue(@Path("owner") owner: String,
+                           @Path("repo") repo: String,
+                           @Path("number") issueNumber: Int) : Observable<List<Comment>>
+
     @GET("repos/{owner}/{repo}/milestones")
     fun getMilestones(@Path("owner") owner: String,
                       @Path("repo") repo: String) : Observable<List<Milestone>>
@@ -39,19 +54,9 @@ interface GithubAPI {
     fun getAllComments(@Path("owner") owner: String,
                        @Path("repo") repo: String) : Observable<List<Comment>>
 
-    @GET("repos/{owner}/{repo}/issues/{number}/comments")
-    fun getComments(@Path("owner") owner: String,
-                    @Path("repo") repo: String,
-                    @Path("number") issueNumber: Int) : Observable<List<Comment>>
-
     @GET("repos/{owner}/{repo}/issues/events")
     fun getAllEvents(@Path("owner") owner: String,
                      @Path("repo") repo: String) : Observable<List<Event>>
-
-    @GET("repos/{owner}/{repo}/issues/{number}/events")
-    fun getEvents(@Path("owner") owner: String,
-                    @Path("repo") repo: String,
-                    @Path("number") issueNumber: Int) : Observable<List<Comment>>
 
     @GET("repos/{owner}/{repo}/assignees")
     fun getAssignees(@Path("owner") owner: String,
@@ -79,8 +84,7 @@ interface GithubAPI {
                      @Query("sort") sort: String?,
                      @Query("order") order: String?) : Observable<SearchResult<Issue>>
 
-    @GET("search/issues?type=pr")
-    fun searchPullRequests(@Query("q") query: String,
-                           @Query("involves") involves: String) : Observable<SearchResult<Issue>>
+    @GET("search/issues?q=type:pr+involves:r0adkll")
+    fun searchPullRequests() : Observable<SearchResult<Issue>>
 
 }
