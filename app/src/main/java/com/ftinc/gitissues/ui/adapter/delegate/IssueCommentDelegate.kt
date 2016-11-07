@@ -1,6 +1,7 @@
 package com.ftinc.gitissues.ui.adapter.delegate
 
 import `in`.uncod.android.bypass.Bypass
+import android.app.Activity
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -19,10 +20,10 @@ import com.hannesdorfmann.adapterdelegates2.AdapterDelegate
  * Created by r0adkll on 11/5/16.
  */
 
-class IssueCommentDelegate(val inflater: LayoutInflater, val bypass: Bypass) : AdapterDelegate<List<BaseIssueMessage>>{
+class IssueCommentDelegate(val activity: Activity, val bypass: Bypass) : AdapterDelegate<List<BaseIssueMessage>>{
 
     override fun onCreateViewHolder(parent: ViewGroup?): RecyclerView.ViewHolder {
-        return CommentViewHolder.create(inflater, parent)
+        return CommentViewHolder.create(activity.layoutInflater, parent)
     }
 
     override fun isForViewType(items: List<BaseIssueMessage>, position: Int): Boolean {
@@ -56,7 +57,7 @@ class CommentViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         name.text = comment.user.login
         commentDate.text = "commented ${comment.created_at.toGithubDate()?.timeAgo()}"
 
-        if(comment.updated_at != null){
+        if(comment.updated_at != null && comment.updated_at != comment.created_at){
             editedDate.visibility = View.VISIBLE
             editedDate.text = "edited ${comment.updated_at.toGithubDate()?.timeAgo()}"
         }else{

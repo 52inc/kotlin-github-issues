@@ -1,5 +1,6 @@
 package com.ftinc.gitissues.ui.screens.home.recents
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
@@ -15,6 +16,7 @@ import com.ftinc.gitissues.di.components.HasComponent
 import com.ftinc.gitissues.ui.BaseFragment
 import com.ftinc.gitissues.ui.screens.home.HomeComponent
 import com.ftinc.gitissues.ui.adapter.IssuesAdapter
+import com.ftinc.gitissues.ui.screens.messenger.IssueMessengerActivity
 import com.ftinc.kit.adapter.BetterRecyclerAdapter
 import com.ftinc.kit.widget.EmptyView
 import javax.inject.Inject
@@ -54,7 +56,8 @@ class RecentsFragment : BaseFragment(), RecentsView {
         adapter = IssuesAdapter(activity)
         adapter.setEmptyView(emptyView)
         adapter.setOnItemClickListener({ view, item, i ->
-            showSnackBar("#${item.number} was clicked")
+            val intent: Intent = IssueMessengerActivity.createIntent(activity, item)
+            startActivity(intent)
         })
 
         recycler.adapter = adapter

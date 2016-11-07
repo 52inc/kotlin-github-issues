@@ -40,6 +40,7 @@
                 android:paddingBottom="@dimen/normal_padding">
 
                 <com.ftinc.gitissues.ui.widget.LabelView
+                    android:id="@+id/status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
@@ -70,7 +71,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/title"
+                        android:id="@+id/issue_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 
@@ -157,6 +158,7 @@
                         />
 
                     <LinearLayout
+                        android:id="@+id/label_container"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@+id/tag_icon"
@@ -164,7 +166,7 @@
                         android:orientation="horizontal"
                         >
 
-                        <com.ftinc.gitissues.ui.widget.LabelView
+                        <!--<com.ftinc.gitissues.ui.widget.LabelView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
@@ -195,7 +197,7 @@
                             tools:text="todo"
                             android:textSize="12sp"
                             app:lv_color="@color/green_500"
-                            />
+                            />-->
 
                     </LinearLayout>
 

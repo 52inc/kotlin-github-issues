@@ -9,7 +9,9 @@ import android.graphics.drawable.ShapeDrawable
 import android.util.AttributeSet
 import android.widget.TextView
 import com.ftinc.gitissues.R
+import com.ftinc.gitissues.api.Label
 import com.ftinc.gitissues.util.color
+import com.ftinc.gitissues.util.colorFromHex
 import com.ftinc.gitissues.util.dipToPx
 import com.ftinc.gitissues.util.drawable
 
@@ -36,7 +38,10 @@ class LabelView : TextView{
         initialize()
     }
 
-
+    constructor(context: Context, label: Label) : super(context) {
+        labelColor = label.color.colorFromHex()
+        text = label.name
+    }
 
     private fun parseAttributes(attrs: AttributeSet?, defStyleAttr: Int){
         val a: TypedArray? = context.obtainStyledAttributes(attrs, R.styleable.LabelView, defStyleAttr, 0)

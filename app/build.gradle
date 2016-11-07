@@ -73,6 +73,10 @@ dependencies {
     compile 'com.jakewharton:kotterknife:0.1.0-SNAPSHOT'
     compile 'com.google.firebase:firebase-auth:9.8.0'
 
+    compile 'com.github.grandstaish.paperparcel:paperparcel:1.0.0'
+    compile 'com.github.grandstaish.paperparcel:paperparcel-kotlin:1.0.0'
+    kapt 'com.github.grandstaish.paperparcel:compiler:1.0.0'
+
     compile project(':bypass')
 
 

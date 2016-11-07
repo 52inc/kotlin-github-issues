@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 /**
  * Created by r0adkll on 11/2/16.
@@ -32,10 +33,16 @@ interface GithubAPI {
                          @Path("repo") repo: String,
                          @Path("number") issueNumber: Int) : Observable<List<Label>>
 
+    @GET
+    fun getEventsOnIssue(@Url url: String): Observable<List<Event>>
+
     @GET("repos/{owner}/{repo}/issues/{number}/events")
     fun getEventsOnIssue(@Path("owner") owner: String,
                          @Path("repo") repo: String,
                          @Path("number") issueNumber: Int) : Observable<List<Event>>
+
+    @GET
+    fun getCommentsOnIssue(@Url url: String): Observable<List<Comment>>
 
     @GET("repos/{owner}/{repo}/issues/{number}/comments")
     fun getCommentsOnIssue(@Path("owner") owner: String,

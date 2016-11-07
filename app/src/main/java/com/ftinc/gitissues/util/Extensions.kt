@@ -1,10 +1,12 @@
 package com.ftinc.gitissues.util
 
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.ftinc.kit.util.TimeUtils
 import com.ftinc.kit.util.Utils
@@ -21,6 +23,9 @@ import java.util.*
 
 fun View.dpToPx(dp: Float) : Float = Utils.dpToPx(this.context, dp)
 fun View.dipToPx(dp: Float) : Int = Utils.dipToPx(this.context, dp)
+fun RecyclerView.ViewHolder.dpToPx(dp: Float) : Float = Utils.dpToPx(this.itemView.context, dp)
+fun RecyclerView.ViewHolder.dipToPx(dp: Float) : Int = Utils.dipToPx(this.itemView.context, dp)
+
 @ColorInt fun View.color(@ColorRes resId: Int) : Int = ContextCompat.getColor(this.context, resId)
 fun View.drawable(@DrawableRes resId: Int) : Drawable = ContextCompat.getDrawable(this.context, resId)
 fun View.setVisible(visible: Boolean) {
@@ -31,3 +36,7 @@ fun View.setVisibleWeak(visible: Boolean) {
 }
 
 fun Date.timeAgo(): String? = TimeUtils.getTimeAgo(this.time)
+fun String.colorFromHex(): Int {
+    val hex: String = if(this.startsWith("#")) this else "#$this"
+    return Color.parseColor(hex)
+}

@@ -37,8 +37,8 @@ abstract class BaseActivity : AppCompatActivity(){
      */
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        setupComponent(App.appComponent)
         super.onCreate(savedInstanceState)
+        setupComponent(App.appComponent)
     }
 
     override fun setContentView(layoutResID: Int) {

@@ -1,12 +1,15 @@
 package com.ftinc.gitissues.api
 
 import com.squareup.moshi.Json
+import nz.bradcampbell.paperparcel.PaperParcel
+import nz.bradcampbell.paperparcel.PaperParcelable
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * User Model
  */
+@PaperParcel
 data class User(val id: Long,
                 val login: String,
                 val avatar_url: String,
@@ -19,7 +22,11 @@ data class User(val id: Long,
                 val public_repos: Int?,
                 val followers: Int?,
                 val following: Int?,
-                val contributions: Int?)
+                val contributions: Int?): PaperParcelable{
+    companion object{
+        @JvmField val CREATOR = PaperParcelable.Creator(User::class.java)
+    }
+}
 
 /**
  * Repository Model
@@ -45,7 +52,10 @@ data class Repository(val id: Long,
 /**
  * Issue Model
  */
+@PaperParcel
 data class Issue(val id: Long,
+                 val comments_url: String,
+                 val events_url: String,
                  val number: Int,
                  val title: String,
                  val body: String,
@@ -60,22 +70,29 @@ data class Issue(val id: Long,
                  val created_at: String,
                  val updated_at: String?,
                  val closed_by: User?,
-                 val pull_request: PR?)
+                 val pull_request: PR?): PaperParcelable{
+    companion object{
+        @JvmField val CREATOR = PaperParcelable.Creator(Issue::class.java)
+    }
+}
 
+@PaperParcel
 data class PR(val url: String)
 
 /**
  * Label Model
  */
+@PaperParcel
 data class Label(val id: Long,
                  val url: String,
                  val name: String,
                  val color: String,
-                 val default: Boolean)
+                 val isDefault: Boolean)
 
 /**
  * Milestone Model
  */
+@PaperParcel
 data class Milestone(val id: Long,
                      val number: Int,
                      val title: String,
@@ -86,8 +103,8 @@ data class Milestone(val id: Long,
                      val closed_issues: Int,
                      val created_at: String,
                      val updated_at: String,
-                     val closed_at: String,
-                     val due_on: String)
+                     val closed_at: String?,
+                     val due_on: String?)
 
 /**
  * Issue Comment Model
@@ -142,7 +159,8 @@ enum class Events(val event: String){
  */
 data class Event(val id: Long,
                  val actor: User,
-                 val commit_id: String,
+                 val commit_id: String?,
+                 val commit_url: String?,
                  val event: String,
                  val created_at: String,
                  val label: Label?,

@@ -21,6 +21,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.screens.messenger.IssueMessengerActivity" />
+
     </application>
 
 </manifest>
