@@ -1,5 +1,7 @@
 package com.ftinc.gitissues.ui.screens.messenger
 
+import android.support.annotation.ColorInt
+import android.support.annotation.ColorRes
 import com.ftinc.gitissues.api.Label
 import com.ftinc.gitissues.ui.BaseView
 import com.ftinc.gitissues.ui.adapter.delegate.BaseIssueMessage
@@ -10,7 +12,7 @@ import com.ftinc.gitissues.ui.adapter.delegate.BaseIssueMessage
 
 interface IssueMessengerView: BaseView{
 
-    fun setStatus(status: String)
+    fun setStatus(status: String, @ColorRes color: Int)
     fun setNumber(number: String)
     fun setIssueTitle(title: String)
     fun setOwnerAvatar(url: String)
@@ -19,5 +21,7 @@ interface IssueMessengerView: BaseView{
 
     fun setLabels(labels: List<Label>)
     fun setMessengerItems(items: List<BaseIssueMessage>)
+
+    fun hideLoading()
 
 }

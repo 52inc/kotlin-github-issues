@@ -1,0 +1,84 @@
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:width="24dp"
+            android:height="24dp"
+            android:viewportWidth="24"
+            android:viewportHeight="24">
+            <group android:name="page_1">
+                <group android:name="artboard">
+                    <path
+                        android:name="top_arrow"
+                        android:pathData="M4,12 L12,4"
+                        android:strokeColor="@color/grey_900"
+                        android:strokeWidth="2"
+                        android:trimPathEnd="0"
+                        android:strokeLineCap="square"
+                        android:strokeLineJoin="miter"
+                        android:strokeMiterLimit="10"/>
+                    <path
+                        android:name="bottom_arrow"
+                        android:pathData="M 4 12 L 12 20"
+                        android:strokeColor="@color/grey_900"
+                        android:strokeWidth="2"
+                        android:trimPathEnd="0"
+                        android:strokeLineCap="square"
+                        android:strokeLineJoin="miter"
+                        android:strokeMiterLimit="10"/>
+                    <path
+                        android:name="middle"
+                        android:pathData="M4.5,12 L20,12"
+                        android:strokeColor="@color/grey_900"
+                        android:strokeWidth="2"
+                        android:strokeLineCap="butt"
+                        android:strokeLineJoin="miter"
+                        android:strokeMiterLimit="10"/>
+                </group>
+            </group>
+        </vector>
+    </aapt:attr>
+    <target android:name="top_arrow">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:name="top_arrow"
+                android:propertyName="trimPathEnd"
+                android:startOffset="275"
+                android:duration="300"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="bottom_arrow">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:name="bottom_arrow"
+                android:propertyName="trimPathEnd"
+                android:startOffset="275"
+                android:duration="300"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+    <target android:name="middle">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:name="middle"
+                android:propertyName="trimPathStart"
+                android:duration="350"
+                android:valueFrom="1"
+                android:valueTo="0"
+                android:valueType="floatType"
+                android:interpolator="@android:interpolator/fast_out_slow_in"/>
+        </aapt:attr>
+    </target>
+</animated-vector>

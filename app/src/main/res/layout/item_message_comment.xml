@@ -7,6 +7,8 @@
     xmlns:tools="http://schemas.android.com/tools"
 
     app:cardCornerRadius="2dp"
+    app:cardElevation="4dp"
+
     android:layout_marginStart="@dimen/normal_padding"
     android:layout_marginEnd="@dimen/normal_padding"
     android:layout_marginTop="@dimen/small_padding"
@@ -23,7 +25,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/normal_padding"
+            android:paddingEnd="@dimen/normal_padding"
+            android:paddingStart="@dimen/normal_padding"
+            android:paddingTop="@dimen/small_padding"
+            android:paddingBottom="@dimen/small_padding"
             >
 
             <com.ftinc.kit.widget.BezelImageView

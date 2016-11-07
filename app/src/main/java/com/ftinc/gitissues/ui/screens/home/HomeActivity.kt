@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.view.ViewPager
+import android.view.Menu
 import butterknife.bindView
 import com.ftinc.gitissues.R
 import com.ftinc.gitissues.di.components.AppComponent
@@ -57,6 +58,11 @@ class HomeActivity: BaseActivity(), HasComponent<HomeComponent>{
             // TODO: Implement circular expose of options similar to plaid
             showSnackBar("Filter Clicked!")
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.activity_home, menu)
+        return true
     }
 
     /***********************************************************************************************

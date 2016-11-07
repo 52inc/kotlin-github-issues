@@ -6,5 +6,7 @@
     <string name="tab_pullrequests">Pull Requests</string>
     <string name="label_private">Private</string>
     <string name="opened_this_issue">opened this issue</string>
+    <string name="action_search">Search</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

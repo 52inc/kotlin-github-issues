@@ -41,6 +41,7 @@ class LabelView : TextView{
     constructor(context: Context, label: Label) : super(context) {
         labelColor = label.color.colorFromHex()
         text = label.name
+        initialize()
     }
 
     private fun parseAttributes(attrs: AttributeSet?, defStyleAttr: Int){

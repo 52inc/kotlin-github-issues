@@ -1,5 +1,6 @@
 package com.ftinc.gitissues.ui.screens.messenger
 
+import com.ftinc.gitissues.R
 import com.ftinc.gitissues.api.*
 import com.ftinc.gitissues.ui.adapter.delegate.*
 import com.ftinc.gitissues.util.timeAgo
@@ -18,11 +19,14 @@ class IssueMessengerPresenterImpl(val issue: Issue,
 
     override fun loadIssueContent() {
 
+        // determine status color
+        val statusColor: Int = if(issue.state.equals("open", true)) R.color.green_500 else R.color.red_500
+
         view.setIssueTitle(issue.title)
         view.setNumber("#${issue.number}")
         view.setOwnerName(issue.user.login)
         view.setOwnerAvatar(issue.user.avatar_url)
-        view.setStatus(issue.state)
+        view.setStatus(issue.state, statusColor)
         view.setOpenDate(issue.created_at.toGithubDate()?.timeAgo().toString())
         view.setLabels(issue.labels)
 
@@ -44,8 +48,10 @@ class IssueMessengerPresenterImpl(val issue: Issue,
         .subscribe({ items ->
             items.add(0, IssueMessage(issue))
             view.setMessengerItems(items)
+            view.hideLoading()
         }, { error ->
             view.showSnackBar(error)
+            view.hideLoading()
         })
 
 

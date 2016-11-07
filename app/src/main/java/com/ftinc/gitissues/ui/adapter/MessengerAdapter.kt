@@ -45,4 +45,10 @@ class MessengerAdapter
         return delegateManager.getItemViewType(getItems(), position)
     }
 
+    override fun getItemId(position: Int): Long {
+        if(position > 0) {
+            return getItem(position).getId()
+        }
+        return RecyclerView.NO_ID
+    }
 }

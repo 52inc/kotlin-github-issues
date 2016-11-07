@@ -18,7 +18,7 @@ class LabelSpan(val color: Int, val radius: Float): ReplacementSpan() {
     }
 
     override fun draw(canvas: Canvas, text: CharSequence, start: Int, end: Int, x: Float, top: Int, y: Int, bottom: Int, paint: Paint) {
-        val rect = RectF(x-radius, top.toFloat()-radius/2, (x-radius) + measureText(paint, text, start, end)!!, bottom.toFloat() + radius/2f)
+        val rect = RectF(x-radius, top.toFloat()-radius/2, (x+radius) + measureText(paint, text, start, end)!!, bottom.toFloat() + radius/2f)
         paint.color = color
         canvas.drawRoundRect(rect, radius, radius, paint)
         paint.color = Color.WHITE

@@ -1,5 +1,6 @@
 package com.ftinc.gitissues.util
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.support.annotation.ColorInt
@@ -23,6 +24,10 @@ import java.util.*
 
 fun View.dpToPx(dp: Float) : Float = Utils.dpToPx(this.context, dp)
 fun View.dipToPx(dp: Float) : Int = Utils.dipToPx(this.context, dp)
+
+fun Context.dpToPx(dp: Float) : Float = Utils.dpToPx(this, dp)
+fun Context.dipToPx(dp: Float) : Int = Utils.dipToPx(this, dp)
+
 fun RecyclerView.ViewHolder.dpToPx(dp: Float) : Float = Utils.dpToPx(this.itemView.context, dp)
 fun RecyclerView.ViewHolder.dipToPx(dp: Float) : Int = Utils.dipToPx(this.itemView.context, dp)
 

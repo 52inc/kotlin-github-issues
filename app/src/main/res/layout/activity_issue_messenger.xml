@@ -12,24 +12,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="6dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Light"
         >
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
             >
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/appbar"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
+
+                app:title=" "
                 />
 
             <LinearLayout
+                android:id="@+id/title_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -53,6 +56,7 @@
                     />
 
                 <RelativeLayout
+                    android:id="@+id/title_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -91,8 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    >
+                    android:orientation="horizontal">
 
                     <com.ftinc.kit.widget.BezelImageView
                         android:id="@+id/owner_avatar"
@@ -120,6 +123,7 @@
                             />
 
                         <TextView
+                            android:id="@+id/opened_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
 
@@ -149,14 +153,6 @@
                     android:layout_marginTop="@dimen/small_padding"
                     >
 
-                    <ImageView android:id="@+id/tag_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/ic_tag"
-                        android:tint="@color/grey_600"
-                        android:padding="8dp"
-                        />
-
                     <LinearLayout
                         android:id="@+id/label_container"
                         android:layout_width="match_parent"
@@ -166,54 +162,42 @@
                         android:orientation="horizontal"
                         >
 
-                        <!--<com.ftinc.gitissues.ui.widget.LabelView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:layout_marginStart="8dp"
-
-                            tools:text="bug"
-                            android:textSize="12sp"
-                            app:lv_color="@color/red_500"
-                            />
-
-                        <com.ftinc.gitissues.ui.widget.LabelView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:layout_marginStart="8dp"
-
-                            tools:text="improvement"
-                            android:textSize="12sp"
-                            app:lv_color="@color/blue_500"
-                            />
-
-                        <com.ftinc.gitissues.ui.widget.LabelView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:layout_marginStart="8dp"
-
-                            tools:text="todo"
-                            android:textSize="12sp"
-                            app:lv_color="@color/green_500"
-                            />-->
-
                     </LinearLayout>
+
+                    <ImageView android:id="@+id/tag_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_tag"
+                        android:tint="@color/grey_600"
+                        android:padding="8dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentStart="true" />
 
                 </RelativeLayout>
 
             </LinearLayout>
 
+
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:paddingBottom="8dp"
+            android:clipToPadding="false"
+
+            />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </android.support.design.widget.CoordinatorLayout>

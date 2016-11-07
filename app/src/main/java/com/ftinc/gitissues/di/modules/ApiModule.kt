@@ -30,7 +30,7 @@ class ApiModule{
                             .addHeader("Authorization", "token ${BuildConfig.API_TOKEN}")
                             .build())
                 }
-                .addInterceptor(HttpLoggingInterceptor().setLevel(if(BuildConfig.DEBUG) Level.BODY else Level.NONE))
+                .addInterceptor(HttpLoggingInterceptor().setLevel(if(BuildConfig.DEBUG) Level.HEADERS else Level.NONE))
                 .build()
     }
 
