@@ -18,14 +18,12 @@ import com.hannesdorfmann.adapterdelegates2.AdapterDelegatesManager
 
 class MessengerAdapter
 
-(activity: Activity) : BetterRecyclerAdapter<BaseIssueMessage, RecyclerView.ViewHolder>() {
+(activity: Activity) : ListRecyclerAdapter<BaseIssueMessage, RecyclerView.ViewHolder>(activity) {
 
-    private val inflater: LayoutInflater
     private val delegateManager: AdapterDelegatesManager<List<BaseIssueMessage>>
     private val bypass: Bypass = Bypass(activity, Bypass.Options())
 
     init {
-        inflater = activity.layoutInflater
         delegateManager = AdapterDelegatesManager()
 
         delegateManager.addDelegate(IssueMessageDelegate(activity, bypass))
@@ -37,17 +35,17 @@ class MessengerAdapter
         return delegateManager.onCreateViewHolder(parent, viewType)
     }
 
-    override fun onBindViewHolder(vh: RecyclerView.ViewHolder?, i: Int) {
-        return delegateManager.onBindViewHolder(getItems(), i, vh!!)
+    override fun onBindViewHolder(vh: RecyclerView.ViewHolder, i: Int) {
+        delegateManager.onBindViewHolder(items, i, vh)
     }
 
     override fun getItemViewType(position: Int): Int {
-        return delegateManager.getItemViewType(getItems(), position)
+        return delegateManager.getItemViewType(items, position)
     }
 
     override fun getItemId(position: Int): Long {
         if(position > 0) {
-            return getItem(position).getId()
+            return items[position].getId()
         }
         return RecyclerView.NO_ID
     }

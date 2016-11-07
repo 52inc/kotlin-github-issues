@@ -1,7 +1,6 @@
 package com.ftinc.gitissues.ui.screens.home.pullrequests
 
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -16,6 +15,7 @@ import com.ftinc.gitissues.ui.BaseFragment
 import com.ftinc.gitissues.ui.screens.home.HomeComponent
 import com.ftinc.gitissues.ui.screens.home.recents.RecentsModule
 import com.ftinc.gitissues.ui.adapter.IssuesAdapter
+import com.ftinc.kit.widget.DividerItemDecoration
 import com.ftinc.kit.widget.EmptyView
 import javax.inject.Inject
 
@@ -56,7 +56,7 @@ class PullRequestsFragment : BaseFragment(), PullRequestsView{
 
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(activity)
-        recycler.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+        recycler.addItemDecoration(DividerItemDecoration(activity))
 
     }
 

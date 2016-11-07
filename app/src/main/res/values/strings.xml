@@ -8,5 +8,6 @@
     <string name="opened_this_issue">opened this issue</string>
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
+    <string name="empty_message_generic">Uh-oh! Looks like nothing is here.</string>
 
 </resources>

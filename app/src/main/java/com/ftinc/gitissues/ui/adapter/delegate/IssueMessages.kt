@@ -23,6 +23,10 @@ class IssueMessage(val issue: Issue) : BaseIssueMessage {
     override fun getId(): Long {
         return issue.id
     }
+
+    override fun hashCode(): Int {
+        return issue.hashCode()
+    }
 }
 
 class CommentIssueMessage(val comment: Comment) : BaseIssueMessage {
@@ -33,6 +37,10 @@ class CommentIssueMessage(val comment: Comment) : BaseIssueMessage {
     override fun getId(): Long {
         return comment.id
     }
+
+    override fun hashCode(): Int {
+        return comment.hashCode()
+    }
 }
 
 class EventIssueMessage(val event: Event) : BaseIssueMessage {
@@ -42,5 +50,9 @@ class EventIssueMessage(val event: Event) : BaseIssueMessage {
 
     override fun getId(): Long {
         return event.id
+    }
+
+    override fun hashCode(): Int {
+        return event.hashCode()
     }
 }

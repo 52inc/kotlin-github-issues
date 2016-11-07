@@ -1,7 +1,6 @@
 package com.ftinc.gitissues.ui.screens.home.repositories
 
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,6 +13,7 @@ import com.ftinc.gitissues.di.components.HasComponent
 import com.ftinc.gitissues.ui.BaseFragment
 import com.ftinc.gitissues.ui.screens.home.HomeComponent
 import com.ftinc.gitissues.ui.adapter.ReposAdapter
+import com.ftinc.kit.widget.DividerItemDecoration
 import com.ftinc.kit.widget.EmptyView
 import javax.inject.Inject
 
@@ -40,7 +40,7 @@ class ReposFragment: BaseFragment(), ReposView{
 
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(activity)
-        recycler.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+        recycler.addItemDecoration(DividerItemDecoration(activity))
 
     }
 

@@ -27,15 +27,17 @@ class IssueMessengerPresenterImpl(val issue: Issue,
         view.setOwnerName(issue.user.login)
         view.setOwnerAvatar(issue.user.avatar_url)
         view.setStatus(issue.state, statusColor)
-        view.setOpenDate(issue.created_at.toGithubDate()?.timeAgo().toString())
+        view.setOpenDate(issue.updated_at?.githubTimeAgo().toString())
         view.setLabels(issue.labels)
 
         // Allways set and show the 'issue' message item
         val issueMsg: IssueMessage = IssueMessage(issue)
         view.setMessengerItems(arrayListOf(issueMsg))
 
-        Observable.combineLatest(api.getCommentsOnIssue(issue.comments_url),
-                api.getEventsOnIssue(issue.events_url), BiFunction<List<Comment>, List<Event>, List<BaseIssueMessage>> { t1, t2 ->
+        Observable.combineLatest(
+                getCommentsObservable(),
+                getEventsObservable(),
+                BiFunction<List<Comment>, List<Event>, List<BaseIssueMessage>> { t1, t2 ->
             val items: ArrayList<BaseIssueMessage> = ArrayList()
             items.addAll(t1.map(::CommentIssueMessage))
             items.addAll(t2.map(::EventIssueMessage))
@@ -55,6 +57,18 @@ class IssueMessengerPresenterImpl(val issue: Issue,
         })
 
 
+    }
+
+    fun getCommentsObservable(): Observable<List<Comment>>{
+        return api.getCommentsOnIssue(issue.comments_url)
+    }
+
+    fun getEventsObservable(): Observable<List<Event>>{
+        return api.getEventsOnIssue(issue.events_url)
+                .map { it.filter {
+                    val e: Events = Events.find(it.event)
+                    e != Events.MENTIONED && e != Events.SUBSCRIBED
+                } }
     }
 
 }

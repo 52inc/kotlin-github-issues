@@ -4,23 +4,30 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="match_parent">
 
-        android:paddingTop="@dimen/small_padding"
-        android:paddingBottom="@dimen/small_padding"
-        android:clipToPadding="false"
-        />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:paddingTop="@dimen/small_padding"
+            android:paddingBottom="@dimen/small_padding"
+            android:clipToPadding="false"
+            />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <com.ftinc.kit.widget.EmptyView
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
-        app:emptyMessage="@string/placeholder_lorem_ipsum"
-        app:emptyIcon="@drawable/ic_git"
+        app:emptyMessage="@string/empty_message_generic"
+        app:emptyIcon="@drawable/ic_empty_github"
         />
 
 </RelativeLayout>

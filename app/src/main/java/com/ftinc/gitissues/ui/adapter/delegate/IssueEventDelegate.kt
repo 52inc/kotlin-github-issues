@@ -16,6 +16,7 @@ import butterknife.bindView
 import com.ftinc.gitissues.R
 import com.ftinc.gitissues.api.Event
 import com.ftinc.gitissues.api.Events
+import com.ftinc.gitissues.api.githubTimeAgo
 import com.ftinc.gitissues.api.toGithubDate
 import com.ftinc.gitissues.util.*
 import com.hannesdorfmann.adapterdelegates2.AdapterDelegate
@@ -77,82 +78,95 @@ class EventViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
             Events.CLOSED -> if (event.commit_id.isNullOrBlank()) {
                 buildSpannable(
                         EventSpan(event.actor.login, StyleSpan(Typeface.BOLD)),
-                        EventSpan("closed this issue about ${event.created_at.toGithubDate()?.timeAgo()}", null))
+                        EventSpan("closed this issue about ${event.created_at.githubTimeAgo()}", null))
             } else {
                 buildSpannable(
                         EventSpan(event.actor.login, StyleSpan(Typeface.BOLD)),
                         EventSpan("closed this issue in", null),
                         EventSpan(event.commit_id!!.slice(0..6), URLSpan(event.commit_url)),
-                        EventSpan(event.created_at.toGithubDate()?.timeAgo().toString(), null))
+                        EventSpan(event.created_at.githubTimeAgo(), null))
             }
-            Events.REOPENED -> buildSpannable(EventSpan(event.actor.login, StyleSpan(Typeface.BOLD)), EventSpan("reopened this issue ${event.created_at.toGithubDate()?.timeAgo()}", null))
+            Events.REOPENED -> buildSpannable(EventSpan(event.actor.login, StyleSpan(Typeface.BOLD)), EventSpan("reopened this issue ${event.created_at.githubTimeAgo()}", null))
 //            Events.SUBSCRIBED -> ""
             Events.MERGED -> buildSpannable(
                     EventSpan(event.actor.login, StyleSpan(Typeface.BOLD)),
                     EventSpan("merged commit", null),
                     EventSpan(event.commit_id!!.slice(0..6), URLSpan(event.commit_url)),
-                    EventSpan(event.created_at.toGithubDate()?.timeAgo().toString(), null)
+                    EventSpan(event.created_at.githubTimeAgo(), null)
             )
             Events.REFERENCED -> buildSpannable(
                     EventSpan(event.actor.login, StyleSpan(Typeface.BOLD)),
                     EventSpan("referenced this issue from commit", null),
                     EventSpan(event.commit_id?.slice(0..6).toString(), URLSpan(event.commit_url)),
-                    EventSpan(event.created_at.toGithubDate()?.timeAgo().toString(), null)
+                    EventSpan(event.created_at.githubTimeAgo(), null)
             )
 //            Events.MENTIONED -> ""
-            Events.ASSIGNED -> buildSpannable(
-                    EventSpan(event.assignee?.login.toString(), StyleSpan(Typeface.BOLD)),
-                    EventSpan("was assigned by", null),
-                    EventSpan(event.assigner?.login.toString(), StyleSpan(Typeface.BOLD)),
-                    EventSpan(event.created_at.toGithubDate()?.timeAgo().toString(), null)
-            )
-            Events.UNASSIGNED -> buildSpannable(
-                    EventSpan(event.assignee?.login.toString(), StyleSpan(Typeface.BOLD)),
-                    EventSpan("was unassigned by", null),
-                    EventSpan(event.assigner?.login.toString(), StyleSpan(Typeface.BOLD)),
-                    EventSpan(event.created_at.toGithubDate()?.timeAgo().toString(), null)
-            )
+            Events.ASSIGNED -> if(event.assignee?.id != event.assigner?.id) {
+                buildSpannable(
+                        EventSpan(event.assignee?.login.toString(), StyleSpan(Typeface.BOLD)),
+                        EventSpan("was assigned by", null),
+                        EventSpan(event.assigner?.login.toString(), StyleSpan(Typeface.BOLD)),
+                        EventSpan(event.created_at.githubTimeAgo(), null))
+            }else{
+                buildSpannable(
+                        EventSpan(event.assignee?.login.toString(), StyleSpan(Typeface.BOLD)),
+                        EventSpan("self-assigned this", null),
+                        EventSpan(event.created_at.githubTimeAgo(), null))
+            }
+            Events.UNASSIGNED -> if(event.assignee?.id != event.assigner?.id) {
+                buildSpannable(
+                        EventSpan(event.assignee?.login.toString(), StyleSpan(Typeface.BOLD)),
+                        EventSpan("was unassigned by", null),
+                        EventSpan(event.assigner?.login.toString(), StyleSpan(Typeface.BOLD)),
+                        EventSpan(event.created_at.githubTimeAgo(), null))
+            }else{
+                buildSpannable(
+                        EventSpan(event.assignee?.login.toString(), StyleSpan(Typeface.BOLD)),
+                        EventSpan("removed their assignment", null),
+                        EventSpan(event.created_at.githubTimeAgo(), null))
+            }
             Events.LABELED -> buildSpannable(
                     EventSpan(event.actor.login.toString(), StyleSpan(Typeface.BOLD)),
                     EventSpan("added the", null),
                     EventSpan(event.label?.name.toString(), LabelSpan(event.label?.color?.colorFromHex()!!, dpToPx(2f))),
-                    EventSpan("label ${event.created_at.toGithubDate()?.timeAgo()}", null)
+                    EventSpan("label ${event.created_at.githubTimeAgo()}", null)
             )
             Events.UNLABELED -> buildSpannable(
                     EventSpan(event.actor.login.toString(), StyleSpan(Typeface.BOLD)),
                     EventSpan("removed the", null),
                     EventSpan(event.label?.name.toString(), LabelSpan(event.label?.color?.colorFromHex()!!, dpToPx(2f))),
-                    EventSpan("label ${event.created_at.toGithubDate()?.timeAgo()}", null)
+                    EventSpan("label ${event.created_at.githubTimeAgo()}", null)
             )
             Events.MILESTONED -> buildSpannable(
                     EventSpan(event.actor.login.toString(), StyleSpan(Typeface.BOLD)),
                     EventSpan("added this to the", null),
                     EventSpan(event.milestone?.title.toString(), StyleSpan(Typeface.BOLD)),
-                    EventSpan("milestone ${event.created_at.toGithubDate()?.timeAgo()}", null)
+                    EventSpan("milestone ${event.created_at.githubTimeAgo()}", null)
             )
             Events.DEMILESTONED -> buildSpannable(
                     EventSpan(event.actor.login.toString(), StyleSpan(Typeface.BOLD)),
                     EventSpan("removed this from the", null),
                     EventSpan(event.milestone?.title.toString(), StyleSpan(Typeface.BOLD)),
-                    EventSpan("milestone ${event.created_at.toGithubDate()?.timeAgo()}", null)
+                    EventSpan("milestone ${event.created_at.githubTimeAgo()}", null)
             )
             Events.RENAMED -> buildSpannable(
                     EventSpan(event.actor.login.toString(), StyleSpan(Typeface.BOLD)),
-                    EventSpan("renamed this issue ${event.created_at.toGithubDate()?.timeAgo()}", null)
+                    EventSpan("renamed this issue ${event.created_at.githubTimeAgo()}", null)
             )
             Events.LOCKED -> buildSpannable(
                     EventSpan(event.actor.login.toString(), StyleSpan(Typeface.BOLD)),
-                    EventSpan("locked this issue ${event.created_at.toGithubDate()?.timeAgo()}", null)
+                    EventSpan("locked this issue ${event.created_at.githubTimeAgo()}", null)
             )
             Events.UNLOCKED -> buildSpannable(
                     EventSpan(event.actor.login.toString(), StyleSpan(Typeface.BOLD)),
-                    EventSpan("unlocked this issue ${event.created_at.toGithubDate()?.timeAgo()}", null)
+                    EventSpan("unlocked this issue ${event.created_at.githubTimeAgo()}", null)
             )
             Events.HEAD_REF_DELETED -> ""
             Events.HEAD_REF_RESTORED -> ""
             else -> buildSpannable(
+                    EventSpan("[${e.name}]", null),
                     EventSpan(event.actor.login.toString(), StyleSpan(Typeface.BOLD)),
-                    EventSpan("modified this issue ${event.created_at.toGithubDate()?.timeAgo()}", null)
+                    EventSpan("modified this issue ${event.created_at.githubTimeAgo()}", null)
             )
         }
         text.text = formatedText

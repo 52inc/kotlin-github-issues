@@ -10,7 +10,11 @@
     </style>
 
     <style name="Theme.GitIssues" parent="Base.Theme.GitIssues">
+    </style>
 
+    <style name="Theme.GitIssues.Translucent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 </resources>

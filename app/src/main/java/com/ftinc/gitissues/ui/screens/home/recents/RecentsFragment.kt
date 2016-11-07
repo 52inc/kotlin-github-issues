@@ -3,7 +3,7 @@ package com.ftinc.gitissues.ui.screens.home.recents
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.DividerItemDecoration
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -18,6 +18,7 @@ import com.ftinc.gitissues.ui.screens.home.HomeComponent
 import com.ftinc.gitissues.ui.adapter.IssuesAdapter
 import com.ftinc.gitissues.ui.screens.messenger.IssueMessengerActivity
 import com.ftinc.kit.adapter.BetterRecyclerAdapter
+import com.ftinc.kit.widget.DividerItemDecoration
 import com.ftinc.kit.widget.EmptyView
 import javax.inject.Inject
 
@@ -36,6 +37,7 @@ class RecentsFragment : BaseFragment(), RecentsView {
      *
      */
 
+    val refreshLayout: SwipeRefreshLayout by bindView(R.id.refresh_layout)
     val recycler: RecyclerView by bindView(R.id.recycler)
     val emptyView: EmptyView by bindView(R.id.empty_view)
 
@@ -62,7 +64,11 @@ class RecentsFragment : BaseFragment(), RecentsView {
 
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(activity)
-        recycler.addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+        recycler.addItemDecoration(DividerItemDecoration(activity))
+
+        refreshLayout.setOnRefreshListener {
+            presenter.loadLatestIssues()
+        }
 
     }
 
@@ -78,6 +84,7 @@ class RecentsFragment : BaseFragment(), RecentsView {
     /***********************************************************************************************
      *
      * Base Methods
+     *
      *
      */
 
@@ -101,7 +108,10 @@ class RecentsFragment : BaseFragment(), RecentsView {
     override fun setLoading(flag: Boolean) {
         when(flag){
             true -> emptyView.setLoading()
-            false -> emptyView.setEmpty()
+            false -> {
+                emptyView.setEmpty()
+                refreshLayout.isRefreshing = false
+            }
         }
     }
 

@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.screens.messenger.IssueMessengerActivity" />
+        <activity android:name=".ui.screens.messenger.IssueMessengerActivity"
+            android:theme="@style/Theme.GitIssues.Translucent"
+            />
 
     </application>
 

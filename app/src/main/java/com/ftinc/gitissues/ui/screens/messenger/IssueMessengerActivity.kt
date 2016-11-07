@@ -32,10 +32,14 @@ import com.ftinc.gitissues.ui.BaseActivity
 import com.ftinc.gitissues.ui.adapter.MessengerAdapter
 import com.ftinc.gitissues.ui.adapter.delegate.BaseIssueMessage
 import com.ftinc.gitissues.ui.widget.LabelView
+import com.ftinc.gitissues.util.RecyclerViewUtils
 import com.ftinc.gitissues.util.dpToPx
 import com.ftinc.kit.util.UIUtils
 import com.ftinc.kit.util.Utils
 import com.ftinc.kit.widget.BezelImageView
+import com.r0adkll.slidr.Slidr
+import com.r0adkll.slidr.model.SlidrConfig
+import com.r0adkll.slidr.model.SlidrPosition
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -64,7 +68,10 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
     val appBarLayout: AppBarLayout by bindView(R.id.appbar_layout)
     val collapsingAppBar: CollapsingToolbarLayout by bindView(R.id.collapsing_toolbar)
     val appbar: Toolbar by bindView(R.id.toolbar)
-    val titleContent: LinearLayout by bindView(R.id.title_content)
+
+    val collapsedTitleInfo: RelativeLayout by bindView(R.id.collapsed_title_info)
+    val collapsedIssueTitle: TextView by bindView(R.id.collapsed_issue_title)
+    val collapsedNumber: TextView by bindView(R.id.collapsed_number)
 
     val status: LabelView by bindView(R.id.status)
     val number: TextView by bindView(R.id.number)
@@ -95,8 +102,12 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_issue_messenger)
 
-//        setSupportActionBar(appbar)
-//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        val config: SlidrConfig = SlidrConfig.Builder()
+                .edge(true)
+                .edgeSize(0.18f)
+                .position(SlidrPosition.LEFT)
+                .build()
+        Slidr.attach(this, config)
 
         val backArrow: AnimatedVectorDrawable = getDrawable(R.drawable.avd_back_simple) as AnimatedVectorDrawable
         appbar.navigationIcon = backArrow
@@ -109,9 +120,12 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
         }
 
         appBarLayout.addOnOffsetChangedListener { appBarLayout, i ->
-            val total: Int = appBarLayout.height - appbar.height
-            val percent: Float = Math.abs(i).toFloat() / total.toFloat()
-            val accelPercent: Float = Utils.clamp(Math.abs(i * 2).toFloat(), 0f, total.toFloat()) / total.toFloat()
+            val total: Float = (appBarLayout.height - appbar.height).toFloat()
+            val percent: Float = Math.abs(i).toFloat() / total
+            val accelPercent: Float = Utils.clamp(Math.abs(i * 2).toFloat(), 0f, total) / total
+
+            val i2: Float = Math.abs(i * 2).toFloat()
+            val p2: Float = Utils.clamp(i2 - total, 0f, total) / total
 
             // modulate alpha visibility of header views
             val alpha: Float = 1f - accelPercent
@@ -121,19 +135,11 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
             openDate.alpha = alpha
             labelContainer.alpha = alpha
             openedLabel.alpha = alpha
+            titleInfo.alpha = alpha
 
-            // modulate translations
-            val translationX = dpToPx(40f) * percent
-            titleInfo.translationX = translationX
+            // Modulate Collapsed title visibility
+            collapsedTitleInfo.alpha = p2
 
-            // Calculate translationY
-            val infoTop: Int = titleInfo.top - titleContent.top
-            val top: Int = ((appbar.height/2) - (titleInfo.height/2))
-            val translationY: Float = (top - infoTop) * percent
-
-            Timber.d("Title - tY: $translationY, tX: $translationX, contentTop: ${titleContent.top}, contentHeight: ${titleContent.height}, infoTop: ${titleInfo.top}, infoHeight: ${titleInfo.height}")
-
-            titleInfo.translationY = translationY
         }
 
         adapter = MessengerAdapter(this)
@@ -179,10 +185,12 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
 
     override fun setNumber(number: String) {
         this.number.text = number
+        this.collapsedNumber.text = number
     }
 
     override fun setIssueTitle(title: String) {
         issueTitle.text = title
+        collapsedIssueTitle.text = title
     }
 
     override fun setOwnerAvatar(url: String) {
@@ -212,9 +220,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
     }
 
     override fun setMessengerItems(items: List<BaseIssueMessage>) {
-        adapter.clear()
-        adapter.addAll(items)
-        adapter.notifyDataSetChanged()
+        RecyclerViewUtils.applyDynamicChanges(adapter, items)
     }
 
 

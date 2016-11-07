@@ -1,5 +1,7 @@
 package com.ftinc.gitissues.api
 
+import com.ftinc.gitissues.ui.adapter.delegate.EventSpan
+import com.ftinc.gitissues.util.timeAgo
 import com.squareup.moshi.Json
 import nz.bradcampbell.paperparcel.PaperParcel
 import nz.bradcampbell.paperparcel.PaperParcelable
@@ -200,3 +202,4 @@ data class Branch(val label: String,
  * Extension function to convert Github date strings into java date objects
  */
 fun String.toGithubDate(): Date? = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).parse(this)
+fun String.githubTimeAgo(): String = this.toGithubDate()?.timeAgo()?: "a momment ago"
