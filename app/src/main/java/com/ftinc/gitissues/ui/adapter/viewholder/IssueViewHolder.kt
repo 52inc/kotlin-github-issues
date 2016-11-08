@@ -2,19 +2,23 @@ package com.ftinc.gitissues.ui.adapter.viewholder
 
 import `in`.uncod.android.bypass.Bypass
 import android.support.v7.widget.RecyclerView
+import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import butterknife.bindView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ftinc.gitissues.R
 import com.ftinc.gitissues.api.Issue
 import com.ftinc.gitissues.api.toGithubDate
 import com.ftinc.gitissues.ui.widget.LabelView
+import com.ftinc.gitissues.util.ImageSpanTarget
 import com.ftinc.gitissues.util.color
 import com.ftinc.gitissues.util.timeAgo
 import com.ftinc.kit.widget.BezelImageView
+import timber.log.Timber
 
 /**
  *
@@ -59,8 +63,14 @@ class IssueViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
         commentCount.text = issue.comments.toString()
 
-        val spannable: CharSequence = bypass.markdownToSpannable(issue.body, body, null)
-        body.text = spannable
+        body.text = bypass.markdownToSpannable(issue.body, body, { s, imageLoadingSpan ->
+            Timber.i("Load markdown image: $s")
+            Glide.with(itemView.context)
+                    .load(s)
+                    .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(ImageSpanTarget(body, imageLoadingSpan))
+        })
 
         // Load avatar from url
         Glide.with(itemView.context)

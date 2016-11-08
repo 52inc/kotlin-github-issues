@@ -25,7 +25,7 @@ class ApiModule{
         return OkHttpClient.Builder()
                 .addInterceptor {
                     it.proceed(it.request().newBuilder()
-                            .addHeader("Accept", "application/vnd.github.v3+json")
+                            .addHeader("Accept", "application/vnd.github.v3.full+json")
                             .addHeader("Accept", "application/vnd.github.squirrel-girl-preview")
                             .addHeader("Authorization", "token ${BuildConfig.API_TOKEN}")
                             .build())

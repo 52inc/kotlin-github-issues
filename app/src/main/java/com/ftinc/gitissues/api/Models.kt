@@ -1,5 +1,6 @@
 package com.ftinc.gitissues.api
 
+import android.net.Uri
 import com.ftinc.gitissues.ui.adapter.delegate.EventSpan
 import com.ftinc.gitissues.util.timeAgo
 import com.squareup.moshi.Json
@@ -56,11 +57,14 @@ data class Repository(val id: Long,
  */
 @PaperParcel
 data class Issue(val id: Long,
+                 val repository_url: String,
                  val comments_url: String,
                  val events_url: String,
                  val number: Int,
                  val title: String,
                  val body: String,
+                 val body_text: String,
+                 val body_html: String,
                  val state: String,
                  val user: User,
                  val labels: List<Label>,
@@ -76,7 +80,14 @@ data class Issue(val id: Long,
     companion object{
         @JvmField val CREATOR = PaperParcelable.Creator(Issue::class.java)
     }
+
+    fun getRepository(): Repo{
+        val (repo, owner) = Uri.parse(repository_url).pathSegments.reversed()
+        return Repo(owner, repo)
+    }
 }
+
+data class Repo(val owner: String, val repo: String)
 
 @PaperParcel
 data class PR(val url: String)
@@ -113,6 +124,8 @@ data class Milestone(val id: Long,
  */
 data class Comment(val id: Long,
                    val body: String,
+                   val body_text: String,
+                   val body_html: String,
                    val user: User,
                    val created_at: String,
                    val updated_at: String?,

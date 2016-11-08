@@ -7,7 +7,6 @@
     xmlns:tools="http://schemas.android.com/tools"
 
     app:cardCornerRadius="2dp"
-    app:cardElevation="4dp"
 
     android:layout_marginStart="@dimen/normal_padding"
     android:layout_marginEnd="@dimen/normal_padding"
