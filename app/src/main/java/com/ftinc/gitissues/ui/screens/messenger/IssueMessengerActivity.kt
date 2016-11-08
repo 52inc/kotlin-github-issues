@@ -32,6 +32,7 @@ import com.ftinc.gitissues.ui.BaseActivity
 import com.ftinc.gitissues.ui.adapter.MessengerAdapter
 import com.ftinc.gitissues.ui.adapter.delegate.BaseIssueMessage
 import com.ftinc.gitissues.ui.widget.LabelView
+import com.ftinc.gitissues.ui.widget.MarkdownInput
 import com.ftinc.gitissues.util.RecyclerViewUtils
 import com.ftinc.gitissues.util.dpToPx
 import com.ftinc.kit.util.UIUtils
@@ -85,6 +86,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
 
     val refreshLayout: SwipeRefreshLayout by bindView(R.id.refresh_layout)
     val recycler: RecyclerView by bindView(R.id.recycler)
+    val editor: MarkdownInput by bindView(R.id.editor)
 
     lateinit var adapter: MessengerAdapter
     lateinit var issue: Issue
@@ -156,6 +158,14 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
         super.onResume()
         refreshLayout.isRefreshing = true
         presenter.loadIssueContent()
+    }
+
+    override fun onBackPressed() {
+        if(editor.expanded){
+            editor.hide()
+        }else {
+            super.onBackPressed()
+        }
     }
 
     /***********************************************************************************************

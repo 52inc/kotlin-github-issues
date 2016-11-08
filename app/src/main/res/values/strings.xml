@@ -4,10 +4,13 @@
     <string name="tab_recents">Recents</string>
     <string name="tab_repositories">Repos</string>
     <string name="tab_pullrequests">Pull Requests</string>
+    <string name="tab_write">Write</string>
+    <string name="tab_preview">Preview</string>
     <string name="label_private">Private</string>
     <string name="opened_this_issue">opened this issue</string>
     <string name="action_search">Search</string>
     <string name="action_settings">Settings</string>
     <string name="empty_message_generic">Uh-oh! Looks like nothing is here.</string>
+    <string name="hint_comment_input">Leave a comment…</string>
 
 </resources>

@@ -30,8 +30,11 @@ fun Context.dipToPx(dp: Float) : Int = Utils.dipToPx(this, dp)
 
 fun RecyclerView.ViewHolder.dpToPx(dp: Float) : Float = Utils.dpToPx(this.itemView.context, dp)
 fun RecyclerView.ViewHolder.dipToPx(dp: Float) : Int = Utils.dipToPx(this.itemView.context, dp)
+@ColorInt fun RecyclerView.ViewHolder.color(@ColorRes resId: Int) : Int = ContextCompat.getColor(this.itemView.context, resId)
 
 @ColorInt fun View.color(@ColorRes resId: Int) : Int = ContextCompat.getColor(this.context, resId)
+
+
 fun View.drawable(@DrawableRes resId: Int) : Drawable = ContextCompat.getDrawable(this.context, resId)
 fun View.setVisible(visible: Boolean) {
     this.visibility = if(visible) View.VISIBLE else View.GONE

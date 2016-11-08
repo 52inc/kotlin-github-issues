@@ -8,6 +8,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.LeadingMarginSpan;
 import android.text.style.RelativeSizeSpan;
@@ -253,9 +254,11 @@ public class Bypass {
             case BLOCK_CODE:
                 setSpan(builder, new LeadingMarginSpan.Standard(mCodeBlockIndent));
                 setSpan(builder, new TypefaceSpan("monospace"));
+                setSpan(builder, new BackgroundColorSpan(Color.parseColor("#F5F5F5")));
                 break;
             case CODE_SPAN:
                 setSpan(builder, new TypefaceSpan("monospace"));
+                setSpan(builder, new BackgroundColorSpan(Color.parseColor("#F5F5F5")));
                 break;
             case LINK:
             case AUTOLINK:

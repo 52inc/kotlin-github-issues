@@ -244,4 +244,11 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <include layout="@layout/layout_markdown_editor"
+        android:id="@+id/editor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        />
+
 </android.support.design.widget.CoordinatorLayout>

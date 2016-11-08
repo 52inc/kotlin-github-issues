@@ -43,16 +43,20 @@ class CommentIssueMessage(val comment: Comment) : BaseIssueMessage {
     }
 }
 
-class EventIssueMessage(val event: Event) : BaseIssueMessage {
+class EventIssueMessage(val events: List<Event>) : BaseIssueMessage {
+
+    fun getEvent(): Event = events[0]
+
     override fun getCreatedDate(): Long {
-        return event.created_at.toGithubDate()?.time ?: 0
+        return getEvent().created_at.toGithubDate()?.time ?: 0
     }
 
     override fun getId(): Long {
-        return event.id
+        return getEvent().id
     }
 
     override fun hashCode(): Int {
-        return event.hashCode()
+        return getEvent().hashCode()
     }
+
 }

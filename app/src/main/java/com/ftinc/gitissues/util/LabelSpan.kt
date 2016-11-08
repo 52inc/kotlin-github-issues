@@ -14,15 +14,16 @@ import com.ftinc.kit.util.Utils
 class LabelSpan(val color: Int, val radius: Float): ReplacementSpan() {
 
     override fun getSize(paint: Paint?, text: CharSequence?, start: Int, end: Int, fm: Paint.FontMetricsInt?): Int {
-        return Math.round(measureText(paint, text, start, end)?.toDouble()!!).toInt()
+        return Math.round(measureText(paint, text, start, end)?.toDouble()!!).toInt() + (radius * 2f).toInt()
     }
 
     override fun draw(canvas: Canvas, text: CharSequence, start: Int, end: Int, x: Float, top: Int, y: Int, bottom: Int, paint: Paint) {
-        val rect = RectF(x-radius, top.toFloat()-radius/2, (x+radius) + measureText(paint, text, start, end)!!, bottom.toFloat() + radius/2f)
+        val nx = x+radius
+        val rect = RectF(nx-radius, top.toFloat()-radius/2, (nx+radius) + measureText(paint, text, start, end)!!, bottom.toFloat() + radius/2f)
         paint.color = color
         canvas.drawRoundRect(rect, radius, radius, paint)
         paint.color = Color.WHITE
-        canvas.drawText(text, start, end, x, y.toFloat(), paint)
+        canvas.drawText(text, start, end, x+radius, y.toFloat(), paint)
     }
 
     private fun measureText(paint: Paint?, text: CharSequence?, start: Int, end: Int): Float? {

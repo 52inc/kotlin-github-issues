@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ftinc.gitissues.ui.widget.MarkdownInput xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrimary"
+    android:elevation="6dp">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:tabMode="scrollable"
+        app:tabSelectedTextColor="@color/black56"
+        app:tabTextColor="@color/black26"
+        app:tabIndicatorColor="?attr/colorAccent"
+
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="@string/tab_write"
+            />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="@string/tab_preview"
+            />
+
+
+    </android.support.design.widget.TabLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/action_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_below="@+id/tabs"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/action_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+
+
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+    <EditText
+        android:id="@+id/input"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_below="@+id/action_scrollview"
+        android:gravity="start|top"
+        android:paddingStart="@dimen/normal_padding"
+        android:paddingEnd="@dimen/normal_padding"
+        android:paddingTop="@dimen/normal_padding"
+        android:paddingBottom="32dp"
+
+        tools:hint="Enter comment here..."
+        tools:text="@string/placeholder_lorem_ipsum_extralong"
+        android:textSize="14sp"
+
+        android:scrollbars="vertical"
+
+        android:background="@color/white"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+    <TextView
+        android:id="@+id/preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_below="@+id/action_scrollview"
+        android:gravity="start|top"
+        android:paddingStart="@dimen/normal_padding"
+        android:paddingEnd="@dimen/normal_padding"
+        android:paddingTop="@dimen/normal_padding"
+        android:paddingBottom="32dp"
+
+        android:scrollbars="vertical"
+
+        tools:text="@string/placeholder_lorem_ipsum_long"
+        android:textSize="14sp"
+
+        android:background="@color/white"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+    <ImageView
+        android:id="@+id/action_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignBottom="@+id/input"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/normal_padding"
+
+        android:src="@drawable/ic_send_black_24dp"
+        android:tint="@color/grey_700"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        />
+
+    <TextView
+        android:id="@+id/input_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+
+        android:gravity="start|center_vertical"
+        android:paddingStart="@dimen/normal_padding"
+        android:paddingEnd="?attr/actionBarSize"
+
+        android:text="@string/hint_comment_input"
+        android:textSize="16sp"
+        tools:visibility="gone"
+
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+</com.ftinc.gitissues.ui.widget.MarkdownInput>
