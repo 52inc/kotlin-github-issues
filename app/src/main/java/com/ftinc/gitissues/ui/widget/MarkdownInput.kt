@@ -327,7 +327,7 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
         }
 
         override fun apply(input: EditText) {
-            throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+            super.apply(input)
         }
 
     }
