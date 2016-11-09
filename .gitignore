@@ -6,3 +6,4 @@
 /build
 /captures
 .externalNativeBuild
+/third_party/bypass/build/

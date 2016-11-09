@@ -314,7 +314,7 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
                 val prevLine: String = buffer.lines()[startLine-1]
 
                 // Use regex to tell if line starts with number
-                val regex = Regex("^[1-9]+\\./gm")
+                val regex = Regex("^[1-9]+\\.")
                 if(prevLine.matches(regex)){
                     // Huzzah, we found previous current number, adjust current number to that number
                     var num = regex.find(prevLine)?.groupValues?.get(0)
