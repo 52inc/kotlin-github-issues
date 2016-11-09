@@ -254,11 +254,9 @@ public class Bypass {
             case BLOCK_CODE:
                 setSpan(builder, new LeadingMarginSpan.Standard(mCodeBlockIndent));
                 setSpan(builder, new TypefaceSpan("monospace"));
-                setSpan(builder, new BackgroundColorSpan(Color.parseColor("#F5F5F5")));
                 break;
             case CODE_SPAN:
                 setSpan(builder, new TypefaceSpan("monospace"));
-                setSpan(builder, new BackgroundColorSpan(Color.parseColor("#F5F5F5")));
                 break;
             case LINK:
             case AUTOLINK:

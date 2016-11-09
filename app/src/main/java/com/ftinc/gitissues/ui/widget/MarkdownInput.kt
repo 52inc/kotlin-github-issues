@@ -282,7 +282,7 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
             Action.ITALIC -> WrapEditorAction("_")
             Action.STRIKETHROUGH -> WrapEditorAction("~~")
             Action.QUOTE -> LineWrapEditorAction("> ")
-            Action.CODE -> WrapEditorAction("`")
+            Action.CODE -> MultilineWrapEditorAction("`", "```")
             Action.MENTION -> ReplaceEditorAction("@")
             Action.LIST_BULLETED -> LineWrapEditorAction("*")
             Action.LIST_NUMBERED -> NumberListEditorAction()
@@ -326,6 +326,7 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
     }
 
     class WrapEditorAction(char: String) : EditorAction(char) {
+
         override fun apply(input: EditText) {
             val buffer: Editable = input.text
             val start = Selection.getSelectionStart(buffer)
@@ -344,6 +345,52 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
                 buffer.insert(start, char)
             }
         }
+    }
+
+    class MultilineWrapEditorAction(char: String, val altChar: String): EditorAction(char) {
+
+        override fun apply(input: EditText) {
+            val buffer: Editable = input.text
+            val start = Selection.getSelectionStart(buffer)
+            val end = Selection.getSelectionEnd(buffer)
+
+            if(start == end){
+                if(start != -1){
+                    buffer.insert(start, "$char$char")
+                    input.setSelection(start+1)
+                }else{
+                    buffer.insert(buffer.length, "$char$char")
+                    input.setSelection(buffer.length-1)
+                }
+            }else{
+                // Insert line at line below end
+                val layout = input.layout
+
+                val startLine = layout.getLineForOffset(start)
+                val endLine = layout.getLineForOffset(end)
+
+                if(startLine != endLine) {
+
+                    // Now insert a line at 1 + endline
+                    buffer.insert(layout.getLineEnd(endLine), "\n")
+                    buffer.insert(layout.getLineStart(endLine + 1), altChar)
+
+                    // Now insert a new line at the one before the start line
+                    if (startLine == 0) {
+                        buffer.insert(0, "\n")
+                        buffer.insert(0, altChar)
+                    } else {
+                        buffer.insert(layout.getLineEnd(startLine - 1), "\n")
+                        buffer.insert(layout.getLineStart(startLine), altChar)
+                    }
+
+                }else{
+                    buffer.insert(end, char)
+                    buffer.insert(start, char)
+                }
+            }
+        }
+
     }
 
     open class LineWrapEditorAction(char: String) : EditorAction(char){
