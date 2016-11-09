@@ -10,6 +10,7 @@ import android.text.Selection
 import android.text.method.ScrollingMovementMethod
 import android.transition.TransitionManager
 import android.util.AttributeSet
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ftinc.gitissues.R
 import com.ftinc.gitissues.util.ImageSpanTarget
 import com.ftinc.gitissues.util.ImeUtils
+import timber.log.Timber
 
 /**
  *
@@ -74,6 +76,40 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
             show()
             input.requestFocus()
             ImeUtils.showIme(input)
+        }
+
+        input.setOnKeyListener { textView, i, keyEvent ->
+            if(keyEvent.keyCode == KeyEvent.KEYCODE_ENTER &&
+                keyEvent.action == KeyEvent.ACTION_DOWN){
+
+                // Check the previous line
+                val buffer: Editable = input.text
+                val layout: Layout = input.layout
+                val start = Selection.getSelectionStart(buffer)
+                val startLine = layout.getLineForOffset(start)
+
+                if(startLine > 0){
+                    val prevLine: String = buffer.lines()[startLine-1]
+
+                    Timber.i("Checking previous line: $prevLine")
+
+                    val lineNumberRegex = Regex("^[0-9]+\\.")
+                    val bulletRegex = Regex("^\\*")
+
+                    if(prevLine.contains(lineNumberRegex)){
+                        var num = lineNumberRegex.find(prevLine)?.groupValues?.get(0)
+                        num = num?.replace(".", "")
+                        val lineNumber = "${num?.toInt() as Int + 1}. "
+                        buffer.insert(start, lineNumber)
+                    }else if(prevLine.contains(bulletRegex)){
+                        buffer.insert(start, "* ")
+                    }
+
+                }
+
+                true
+            }
+            false
         }
 
 //        input.setOnFocusChangeListener { view, b ->
@@ -313,13 +349,18 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
             if(startLine > 0){
                 val prevLine: String = buffer.lines()[startLine-1]
 
+                Timber.i("Checking previous line: $prevLine")
+
                 // Use regex to tell if line starts with number
-                val regex = Regex("^[1-9]+\\.")
-                if(prevLine.matches(regex)){
+                val regex = Regex("^[0-9]+\\.")
+                if(prevLine.contains(regex)){
                     // Huzzah, we found previous current number, adjust current number to that number
                     var num = regex.find(prevLine)?.groupValues?.get(0)
                     num = num?.replace(".", "")
-                    currentNumber = num?.toInt() as Int
+
+                    Timber.i("Regex matched previous line($prevLine) with ($num)")
+
+                    currentNumber = num?.toInt() as Int + 1
                 }
             }
 

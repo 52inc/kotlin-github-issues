@@ -73,6 +73,7 @@
         tools:hint="Enter comment here..."
         tools:text="@string/placeholder_lorem_ipsum_extralong"
         android:textSize="14sp"
+        android:fontFamily="monospace"
 
         android:scrollbars="vertical"
 
@@ -100,7 +101,6 @@
 
         android:background="@color/white"
         android:visibility="gone"
-        tools:visibility="visible"
         />
 
     <ImageView
