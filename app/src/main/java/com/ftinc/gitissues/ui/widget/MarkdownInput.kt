@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout
 import android.text.Editable
 import android.text.Layout
 import android.text.Selection
+import android.text.TextWatcher
 import android.text.method.ScrollingMovementMethod
 import android.transition.TransitionManager
 import android.util.AttributeSet
@@ -14,6 +15,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 import butterknife.bindView
 import com.bumptech.glide.Glide
@@ -78,9 +80,73 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
             ImeUtils.showIme(input)
         }
 
-        input.setOnKeyListener { textView, i, keyEvent ->
-            if(keyEvent.keyCode == KeyEvent.KEYCODE_ENTER &&
-                keyEvent.action == KeyEvent.ACTION_DOWN){
+        input.addTextChangedListener(object: TextWatcher{
+            override fun afterTextChanged(s: Editable?) {}
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (!s.isNullOrEmpty() && before == 0 && count == 1 && s!![start] == '\n') {
+                    // Check the previous line
+                    val buffer: Editable = input.text
+                    val layout: Layout = input.layout
+                    val start = Selection.getSelectionStart(buffer)
+                    val startLine = layout.getLineForOffset(start)
+
+                    if(startLine > 0){
+                        val prevLine: String = buffer.lines()[startLine-1]
+
+                        Timber.i("Checking previous line: $prevLine")
+
+                        val lineNumberRegex = Regex("^[0-9]+\\.")
+                        val bulletRegex = Regex("^\\*(?!\\*)")
+
+                        if(prevLine.contains(lineNumberRegex)){
+                            var num = lineNumberRegex.find(prevLine)?.groupValues?.get(0)
+
+                            // Now determine if the previous line is empty, or not
+                            val isEmpty = prevLine.replace(num ?: "", "").isNullOrBlank()
+                            if(!isEmpty) {
+                                num = num?.replace(".", "")
+                                val lineNumber = "${num?.toInt() as Int + 1}. "
+                                buffer.insert(start, lineNumber)
+                            }else{
+                                // Delete the previous blank line number
+                                val s = layout.getLineStart(startLine-1)
+                                val e = s + (num?.length ?: 0)
+                                buffer.delete(s, e)
+                            }
+                        }else if(prevLine.contains(bulletRegex)){
+                            var num = bulletRegex.find(prevLine)?.groupValues?.get(0)
+                            val isEmpty = prevLine.replace(num ?: "", "").isNullOrBlank()
+                            if(!isEmpty) {
+                                buffer.insert(start, "* ")
+                            }else{
+                                val s = layout.getLineStart(startLine-1)
+                                val e = s + (num?.length ?: 0)
+                                buffer.delete(s, e)
+                            }
+                        }
+                    }
+                }
+            }
+        })
+
+        input.setOnKeyListener { view, i, keyEvent ->
+            Timber.d("OnKeyListener($i, ${keyEvent.action})")
+            if(keyEvent.action == KeyEvent.ACTION_DOWN){
+                when(i){
+                    KeyEvent.KEYCODE_ENTER -> {
+
+                    }
+                    else -> false
+                }
+            }
+            false
+        }
+
+        input.setOnEditorActionListener { textView, i, keyEvent ->
+            Timber.d("OnEditorAction($i, ${keyEvent.action})")
+            if(i == EditorInfo.IME_ACTION_DONE){
 
                 // Check the previous line
                 val buffer: Editable = input.text
@@ -105,9 +171,10 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
                         buffer.insert(start, "* ")
                     }
 
+                    true
                 }
 
-                true
+                false
             }
             false
         }

@@ -76,6 +76,7 @@
         android:fontFamily="monospace"
 
         android:scrollbars="vertical"
+        android:inputType="text|textMultiLine|textNoSuggestions"
 
         android:background="@color/white"
         android:visibility="gone"
