@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
  * Created by r0adkll on 11/6/16.
  */
 
-class IssueMessengerPresenterImpl(val issue: Issue,
+class IssueMessengerPresenterImpl(var issue: Issue,
                                   val api: GithubAPI,
                                   val view: IssueMessengerView): IssueMessengerPresenter{
 
@@ -36,23 +36,29 @@ class IssueMessengerPresenterImpl(val issue: Issue,
 
     }
 
+    override fun updateLabels(labels: List<Label>) {
+        val (owner, repo) = issue.getRepository()
+        val updateIssue = IssueEdit(issue.title, issue.body, issue.state, issue.milestone?.number, labels.map { it.name }, if(issue.assignee != null) listOf(issue.assignee?.login!!) else null)
+        api.editIssue(owner, repo, issue.number, updateIssue)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    issue = it
+                    updateViewWithIssue()
+                }, {
+                    view.showSnackBar(it)
+                })
+    }
+
     override fun loadIssueContent() {
 
         // determine status color
-        val statusColor: Int = if(issue.state.equals("open", true)) R.color.green_500 else R.color.red_500
-
-        view.setIssueTitle(issue.title)
-        view.setNumber("#${issue.number}")
-        view.setOwnerName(issue.user.login)
-        view.setOwnerAvatar(issue.user.avatar_url)
-        view.setStatus(issue.state, statusColor)
-        view.setOpenDate(issue.updated_at?.githubTimeAgo().toString())
-        view.setLabels(issue.labels)
+        updateViewWithIssue()
 
         // Allways set and show the 'issue' message item
         val issueMsg: IssueMessage = IssueMessage(issue)
         view.setMessengerItems(arrayListOf(issueMsg))
 
+        // Load the comments and events
         Observable.combineLatest(
                 getCommentsObservable(),
                 getEventsObservable(),
@@ -75,7 +81,34 @@ class IssueMessengerPresenterImpl(val issue: Issue,
             view.hideLoading()
         })
 
+        // Load the repos labels
+        val repo = issue.getRepository()
+        api.getLabels(repo.owner, repo.repo)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ labels ->
+                    // build map of issue labels that are currently taged on it
+                    val selectedMap = issue.labels.fold(mutableMapOf<Label, Boolean>(), {
+                        map, label ->
+                        map[label] = true
+                        map
+                    })
 
+                    view.setEditableLabels(labels, selectedMap)
+                }, { error ->
+                    view.showSnackBar(error)
+                })
+
+    }
+
+    fun updateViewWithIssue(){
+        val statusColor: Int = if(issue.state.equals("open", true)) R.color.green_500 else R.color.red_500
+        view.setIssueTitle(issue.title)
+        view.setNumber("#${issue.number}")
+        view.setOwnerName(issue.user.login)
+        view.setOwnerAvatar(issue.user.avatar_url)
+        view.setStatus(issue.state, statusColor)
+        view.setOpenDate(issue.updated_at?.githubTimeAgo().toString())
+        view.setLabels(issue.labels)
     }
 
     fun getCommentsObservable(): Observable<List<Comment>>{

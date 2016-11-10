@@ -1,6 +1,6 @@
 package com.ftinc.gitissues.ui.adapter
 
-import android.app.Activity
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +13,7 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>
 /**
  * Constructor
  */
-(activity: Activity) : RecyclerView.Adapter<VH>() {
+(context: Context) : RecyclerView.Adapter<VH>() {
 
     /**
      * Used to inflate the layouts of all the items
@@ -27,7 +27,7 @@ abstract class ListRecyclerAdapter<M, VH : RecyclerView.ViewHolder>
 
     init {
         this.setHasStableIds(true)
-        this.inflater = activity.layoutInflater
+        this.inflater = LayoutInflater.from(context)
     }
 
     /***********************************************************************************************

@@ -31,7 +31,7 @@ import timber.log.Timber
  * Created by drew.heavner on 11/8/16.
  */
 
-class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelectedListener {
+class MarkdownEditor : RelativeLayout, View.OnClickListener, TabLayout.OnTabSelectedListener {
 
     /***********************************************************************************************
      *
@@ -45,13 +45,13 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
     val MULTI_INDENT_REGEX: Regex = Regex("^(\\s{4}|\\t)+")
     val INDENT: String = "    "
 
+    val actionBack: ImageView by bindView(R.id.back)
     val actionScrollView: HorizontalScrollView by bindView(R.id.action_scrollview)
     val actionLayout: LinearLayout by bindView(R.id.action_layout)
     val input: EditText by bindView(R.id.input)
     val preview: TextView by bindView(R.id.preview)
     val actionSend: ImageView by bindView(R.id.action_send)
     val loading: ProgressBar by bindView(R.id.loading)
-    val inputCompact: TextView by bindView(R.id.input_placeholder)
     val tabs: TabLayout by bindView(R.id.tabs)
 
     var expanded: Boolean = false
@@ -85,11 +85,7 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
         super.onFinishInflate()
 
         // Setup click listeners and inflater
-        inputCompact.setOnClickListener {
-            show()
-            input.requestFocus()
-            ImeUtils.showIme(input)
-        }
+        actionBack.setOnClickListener { hide() }
 
         input.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
@@ -216,17 +212,23 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
         expanded = true
         TransitionManager.beginDelayedTransition(parent as ViewGroup)
         Tools.visibility(true, actionScrollView, input, tabs)
-        Tools.visibility(false, preview, inputCompact)
+        Tools.visibility(false, preview)
         tabs.setSelectedTabIndicatorColor(0)
         actionSend.isEnabled = input.text.isNullOrBlank()
     }
 
     fun hide(){
         expanded = false
-        TransitionManager.beginDelayedTransition(parent as ViewGroup)
-        Tools.visibility(false, actionScrollView, input, preview, tabs, loading)
-        Tools.visibility(true, inputCompact)
         actionSend.isEnabled = false
+        animate()
+                .translationY(height.toFloat())
+                .setDuration(300)
+                .setInterpolator(AnimUtils.getFastOutSlowInInterpolator(context))
+                .withEndAction {
+                    gone()
+                    translationY = 0f
+                }
+                .start()
     }
 
     fun showPreview(){

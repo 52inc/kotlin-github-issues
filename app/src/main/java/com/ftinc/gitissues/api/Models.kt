@@ -208,7 +208,11 @@ data class Event(val id: Long,
                  val label: Label?,
                  val assignee: User?,
                  val assigner: User?,
-                 val milestone: Milestone?)
+                 val milestone: Milestone?,
+                 val rename: Rename?)
+
+data class Rename(val from: String,
+                  val to: String)
 
 /**
  * Pull Request Model

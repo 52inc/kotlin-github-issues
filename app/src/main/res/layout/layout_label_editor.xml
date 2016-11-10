@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.ftinc.gitissues.ui.widget.LabelEditor
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?android:colorBackground"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="@dimen/appbar_elevation"
+        app:elevation="@dimen/appbar_elevation">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+
+            app:title="@string/action_labels"
+            app:navigationIcon="@drawable/ic_close_black_24dp"
+            />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <SearchView
+        android:id="@+id/search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar_layout"
+
+        android:queryHint="Filter"
+        app:queryHint="Filter"
+        />
+
+    <View
+        android:id="@+id/sep"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/black12"
+        android:layout_below="@+id/search_view"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/sep"
+
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+
+        app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+        />
+
+    <com.ftinc.kit.widget.EmptyView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+
+        app:emptyIcon="@drawable/ic_empty_tag_multiple"
+        app:emptyMessage="@string/empty_labels"
+        app:emptyActionText="@string/action_create_label"
+        app:emptyActionColor="?attr/colorAccent"
+        app:emptyIconColor="@color/black12"
+        />
+
+</com.ftinc.gitissues.ui.widget.LabelEditor>

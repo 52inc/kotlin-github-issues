@@ -106,9 +106,10 @@ interface GithubAPI {
                     @Path("repo") repo: String,
                     @Body body: IssueEdit) : Observable<Issue>
 
-    @PATCH("repos/{owner}/{repo}/issues")
+    @PATCH("repos/{owner}/{repo}/issues/{number}")
     fun editIssue(@Path("owner") owner: String,
                   @Path("repo") repo: String,
+                  @Path("number") number: Int,
                   @Body body: IssueEdit) : Observable<Issue>
 
     @GET("repos/{owner}/{repo}/issues/{number}/labels")

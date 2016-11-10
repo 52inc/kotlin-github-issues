@@ -52,9 +52,17 @@ class LabelView : TextView{
 
     private fun initialize(){
         // Setup padding
-        val pad:Int = dipToPx(8f)
-        val padTB:Int = dipToPx(4f)
-        setPadding(pad, padTB, pad, padTB)
+        var padL:Int = dipToPx(8f)
+        var padR:Int = dipToPx(8f)
+        var padT:Int = dipToPx(4f)
+        var padB:Int = dipToPx(4f)
+
+        // Normalize padding
+        padT = normalize(paddingTop, padT)
+        padB = normalize(paddingBottom, padB)
+        padL = normalize(paddingLeft, padL)
+        padR = normalize(paddingRight, padR)
+        setPadding(padL, padT, padR, padB)
 
         // Setup text constraints
         val bg:Drawable = drawable(R.drawable.dr_label_background)
@@ -63,5 +71,7 @@ class LabelView : TextView{
 
         setTextColor(Color.WHITE)
     }
+
+    fun normalize(value: Int, default: Int): Int = if(default > value) default else value
 
 }

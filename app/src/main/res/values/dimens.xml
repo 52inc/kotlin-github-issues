@@ -12,5 +12,9 @@
 
     <dimen name="avatar_small_dimen">32dp</dimen>
     <dimen name="editor_action">56dp</dimen>
+    <dimen name="z_fab">6dp</dimen>
+    <dimen name="touch_raise">9dp</dimen>
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="fab_radius">28dp</dimen>
 
 </resources>

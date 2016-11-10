@@ -63,14 +63,14 @@ class IssueViewHolder(view: View) : RecyclerView.ViewHolder(view){
 
         commentCount.text = issue.comments.toString()
 
-        body.text = bypass.markdownToSpannable(issue.body, body, { s, imageLoadingSpan ->
+        body.text = bypass.markdownToSpannable(issue.body, body, null) /*{ s, imageLoadingSpan ->
             Timber.i("Load markdown image: $s")
             Glide.with(itemView.context)
                     .load(s)
                     .asBitmap()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ImageSpanTarget(body, imageLoadingSpan))
-        })
+        })*/
 
         // Load avatar from url
         Glide.with(itemView.context)

@@ -7,8 +7,11 @@ import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
+import android.support.annotation.TransitionRes
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CollapsingToolbarLayout
+import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -17,10 +20,14 @@ import android.support.v7.widget.Toolbar
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
-import android.widget.TextView
+import android.transition.Transition
+import android.transition.TransitionInflater
+import android.transition.TransitionManager
+import android.util.SparseArray
+import android.view.View
+import android.widget.*
 import butterknife.bindView
+import butterknife.bindViews
 import com.bumptech.glide.Glide
 import com.ftinc.gitissues.App
 import com.ftinc.gitissues.R
@@ -32,10 +39,10 @@ import com.ftinc.gitissues.ui.BaseActivity
 import com.ftinc.gitissues.ui.adapter.MessengerAdapter
 import com.ftinc.gitissues.ui.adapter.delegate.BaseIssueMessage
 import com.ftinc.gitissues.ui.adapter.delegate.CommentIssueMessage
+import com.ftinc.gitissues.ui.widget.LabelEditor
 import com.ftinc.gitissues.ui.widget.LabelView
-import com.ftinc.gitissues.ui.widget.MarkdownInput
-import com.ftinc.gitissues.util.RecyclerViewUtils
-import com.ftinc.gitissues.util.dpToPx
+import com.ftinc.gitissues.ui.widget.MarkdownEditor
+import com.ftinc.gitissues.util.*
 import com.ftinc.kit.util.UIUtils
 import com.ftinc.kit.util.Utils
 import com.ftinc.kit.widget.BezelImageView
@@ -49,7 +56,7 @@ import javax.inject.Inject
  * Created by r0adkll on 11/4/16.
  */
 
-class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
+class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickListener {
 
     companion object{
         @JvmStatic val EXTRA_ISSUE = "com.r0adkll.gitissues.intent.EXTRA_ISSUE"
@@ -67,9 +74,10 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
      *
      */
 
+    val rootLayout: CoordinatorLayout by bindView(R.id.root_layout)
     val appBarLayout: AppBarLayout by bindView(R.id.appbar_layout)
     val collapsingAppBar: CollapsingToolbarLayout by bindView(R.id.collapsing_toolbar)
-    val appbar: Toolbar by bindView(R.id.toolbar)
+    val appbar: Toolbar by bindView(R.id.appbar)
 
     val collapsedTitleInfo: RelativeLayout by bindView(R.id.collapsed_title_info)
     val collapsedIssueTitle: TextView by bindView(R.id.collapsed_issue_title)
@@ -87,10 +95,20 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
 
     val refreshLayout: SwipeRefreshLayout by bindView(R.id.refresh_layout)
     val recycler: RecyclerView by bindView(R.id.recycler)
-    val editor: MarkdownInput by bindView(R.id.editor)
+    val editor: MarkdownEditor by bindView(R.id.editor)
+    val labelEditor: LabelEditor by bindView(R.id.label_editor)
 
-    lateinit var adapter: MessengerAdapter
-    lateinit var issue: Issue
+    val fab: FloatingActionButton by bindView(R.id.fab)
+    val scrim: View by bindView(R.id.results_scrim)
+    val issueActionContainer: FrameLayout by bindView(R.id.issue_actions_container)
+    val inputScrim: View by bindView(R.id.input_scrim)
+
+    val actions: List<TextView> by bindViews(R.id.action_labels, R.id.action_milestones,
+            R.id.action_assignees, R.id.action_new_comment)
+
+    private lateinit var adapter: MessengerAdapter
+    private lateinit var issue: Issue
+    private val transitions = SparseArray<Transition>()
 
     @Inject
     lateinit var presenter: IssueMessengerPresenter
@@ -154,11 +172,38 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
             presenter.loadIssueContent()
         }
 
-        editor.setOnMarkdownSubmitListener(object : MarkdownInput.OnMarkdownSubmitListener{
+        editor.setOnMarkdownSubmitListener(object : MarkdownEditor.OnMarkdownSubmitListener{
             override fun onMarkdownSubmit(markdown: String) {
                 presenter.createComment(markdown)
             }
         })
+
+        fab.setOnClickListener {
+            TransitionManager.beginDelayedTransition(rootLayout, getTransition(R.transition.search_show_confirm))
+            fab.invisible()
+            issueActionContainer.visible()
+            scrim.visible()
+        }
+
+        scrim.setOnClickListener {
+            if(issueActionContainer.visibility == View.VISIBLE){
+                TransitionManager.beginDelayedTransition(rootLayout, getTransition(R.transition.search_hide_confirm))
+                issueActionContainer.gone()
+                scrim.gone()
+                fab.visible()
+            }
+        }
+
+        actions.forEach {
+            it.setOnClickListener(this)
+        }
+
+        labelEditor.setOnLabelsSelectedListener(object : LabelEditor.OnLabelsSelectedListener{
+            override fun onLabelsSaved(labels: List<Label>) {
+                presenter.updateLabels(labels)
+            }
+        })
+
     }
 
     override fun onResume() {
@@ -168,11 +213,78 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
     }
 
     override fun onBackPressed() {
-        if(editor.expanded){
+        if(editor.visibility == View.VISIBLE){
+            fab.visible()
             editor.hide()
+        }else if(issueActionContainer.visibility == View.VISIBLE) {
+            TransitionManager.beginDelayedTransition(rootLayout, getTransition(R.transition.search_hide_confirm))
+            issueActionContainer.gone()
+            scrim.gone()
+            fab.visible()
         }else {
             super.onBackPressed()
         }
+    }
+
+    /**
+     * Called when an Issue action is clicked
+     */
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.action_labels -> {
+                val transition = getTransition(R.transition.issue_label_editor_show)
+                transition?.addListener(object : TransitionUtils.TransitionListenerAdapter() {
+                    override fun onTransitionEnd(transition: Transition?) {
+                        issueActionContainer.gone()
+                        scrim.gone()
+                        inputScrim.animate()
+                                .alpha(0f)
+                                .setInterpolator(AnimUtils.getFastOutLinearInInterpolator(this@IssueMessengerActivity))
+                                .setDuration(300)
+                                .withEndAction {
+                                    inputScrim.gone()
+                                    inputScrim.alpha = 1f
+                                }
+                                .start()
+                    }
+                })
+                TransitionManager.beginDelayedTransition(rootLayout, transition)
+                labelEditor.visible()
+                inputScrim.visible()
+            }
+            R.id.action_milestones -> null
+            R.id.action_assignees -> null
+            R.id.action_new_comment -> {
+                val transition = getTransition(R.transition.issue_editor_show)
+                transition?.addListener(object : TransitionUtils.TransitionListenerAdapter() {
+                    override fun onTransitionEnd(transition: Transition?) {
+                        issueActionContainer.gone()
+                        scrim.gone()
+                        inputScrim.animate()
+                                .alpha(0f)
+                                .setInterpolator(AnimUtils.getFastOutLinearInInterpolator(this@IssueMessengerActivity))
+                                .setDuration(300)
+                                .withEndAction {
+                                    inputScrim.gone()
+                                    inputScrim.alpha = 1f
+                                }
+                                .start()
+                    }
+                })
+                TransitionManager.beginDelayedTransition(rootLayout, transition)
+                editor.visible()
+                inputScrim.visible()
+            }
+        }
+    }
+
+    internal fun getTransition(@TransitionRes transitionId: Int): Transition? {
+        var transition: Transition? = transitions.get(transitionId)
+        if (transition == null) {
+            transition = TransitionInflater.from(this).inflateTransition(transitionId)
+            transitions.put(transitionId, transition)
+        }
+        return transition
     }
 
     /***********************************************************************************************
@@ -238,6 +350,10 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
                     lp.marginEnd = Utils.dipToPx(this, 8f)
                     labelContainer.addView(it, lp)
                 }
+    }
+
+    override fun setEditableLabels(labels: List<Label>?, selectedMap: MutableMap<Label, Boolean>) {
+        labelEditor.setLabels(labels ?: listOf(), selectedMap)
     }
 
     override fun setMessengerItems(items: List<BaseIssueMessage>) {

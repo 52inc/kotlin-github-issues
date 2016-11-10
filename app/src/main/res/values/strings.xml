@@ -12,5 +12,12 @@
     <string name="action_settings">Settings</string>
     <string name="empty_message_generic">Uh-oh! Looks like nothing is here.</string>
     <string name="hint_comment_input">Leave a comment…</string>
+    <string name="action_labels">Labels</string>
+    <string name="action_milestones">Milestones</string>
+    <string name="action_assignees">Assignees</string>
+    <string name="action_new_comment">New comment</string>
+    <string name="action_save">Save</string>
+    <string name="empty_labels">Looks like there aren\'t any labels to add</string>
+    <string name="action_create_label">Create label</string>
 
 </resources>

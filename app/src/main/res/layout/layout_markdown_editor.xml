@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ftinc.gitissues.ui.widget.MarkdownInput xmlns:android="http://schemas.android.com/apk/res/android"
+<com.ftinc.gitissues.ui.widget.MarkdownEditor xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary"
     android:elevation="6dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,16 +15,23 @@
         android:background="?attr/colorPrimary"
         android:elevation="4dp">
 
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+
+            android:src="@drawable/ic_close_black_24dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            />
+
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:layout_toEndOf="@+id/back"
 
             app:tabMode="scrollable"
-            app:tabIndicatorHeight="4dp"
-
-            android:visibility="gone"
-            tools:visibility="visible"
             >
 
             <android.support.design.widget.TabItem
@@ -48,8 +55,7 @@
             android:id="@+id/action_scrollview"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:layout_below="@+id/tabs">
 
             <LinearLayout
                 android:id="@+id/action_layout"
@@ -63,32 +69,7 @@
 
         </HorizontalScrollView>
 
-    </LinearLayout>
-
-    <EditText
-        android:id="@+id/input"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
-        android:layout_below="@+id/header"
-        android:gravity="start|top"
-        android:paddingStart="@dimen/normal_padding"
-        android:paddingEnd="@dimen/normal_padding"
-        android:paddingTop="@dimen/normal_padding"
-        android:paddingBottom="32dp"
-
-        tools:hint="Enter comment here..."
-        tools:text="@string/placeholder_lorem_ipsum_extralong"
-        android:textSize="14sp"
-        android:fontFamily="monospace"
-
-        android:scrollbars="vertical"
-        android:inputType="text|textMultiLine|textNoSuggestions"
-
-        android:background="@color/white"
-        android:visibility="gone"
-        tools:visibility="visible"
-        />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/preview"
@@ -135,20 +116,27 @@
         android:visibility="gone"
         />
 
-    <TextView
-        android:id="@+id/input_placeholder"
+    <EditText
+        android:id="@+id/input"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="match_parent"
 
-        android:gravity="start|center_vertical"
+        android:gravity="start|top"
         android:paddingStart="@dimen/normal_padding"
-        android:paddingEnd="?attr/actionBarSize"
+        android:paddingEnd="@dimen/normal_padding"
+        android:paddingTop="@dimen/normal_padding"
+        android:paddingBottom="32dp"
 
-        android:text="@string/hint_comment_input"
-        android:textSize="16sp"
-        tools:visibility="gone"
+        tools:hint="Enter comment here..."
+        tools:text="@string/placeholder_lorem_ipsum_extralong"
+        android:textSize="14sp"
+        android:fontFamily="monospace"
 
-        android:layout_alignParentTop="true"
+        android:scrollbars="vertical"
+        android:inputType="text|textMultiLine|textNoSuggestions"
+
+        android:background="@color/white"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
-</com.ftinc.gitissues.ui.widget.MarkdownInput>
+</com.ftinc.gitissues.ui.widget.MarkdownEditor>

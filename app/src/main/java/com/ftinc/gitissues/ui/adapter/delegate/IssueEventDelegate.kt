@@ -85,104 +85,108 @@ class EventViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
             Events.CLOSED -> fancyText {
                 if (event.commit_id.isNullOrBlank()) {
                     span(event.actor.login, StyleSpan(Typeface.BOLD))
-                    span("closed this issue about ${event.created_at.githubTimeAgo()}", null)
+                    span("closed this issue about ${event.created_at.githubTimeAgo()}")
                 }else {
                     span(event.actor.login, StyleSpan(Typeface.BOLD))
-                    span("closed this issue in", null)
+                    span("closed this issue in")
                     span(event.commit_id!!.slice(0..6), URLSpan(event.commit_url))
-                    span(event.created_at.githubTimeAgo(), null)
+                    span(event.created_at.githubTimeAgo())
                 }
             }
             Events.REOPENED -> fancyText {
                 span(event.actor.login, StyleSpan(Typeface.BOLD))
-                span("reopened this issue ${event.created_at.githubTimeAgo()}", null)
+                span("reopened this issue ${event.created_at.githubTimeAgo()}")
             }
             Events.MERGED -> fancyText {
                 span(event.actor.login, StyleSpan(Typeface.BOLD))
-                span("merged commit", null)
+                span("merged commit")
                 span(event.commit_id!!.slice(0..6), URLSpan(event.commit_url))
-                span(event.created_at.githubTimeAgo(), null)
+                span(event.created_at.githubTimeAgo())
             }
             Events.REFERENCED -> fancyText {
                 span(event.actor.login, StyleSpan(Typeface.BOLD))
-                span("referenced this issue from commit", null)
+                span("referenced this issue from commit")
                 span(event.commit_id?.slice(0..6).toString(), URLSpan(event.commit_url))
-                span(event.created_at.githubTimeAgo(), null)
+                span(event.created_at.githubTimeAgo())
             }
             Events.ASSIGNED -> fancyText {
                 if(event.assignee?.id != event.assigner?.id) {
                     span(event.assignee?.login.toString(), StyleSpan(Typeface.BOLD))
-                    span("was assigned by", null)
+                    span("was assigned by")
                     span(event.assigner?.login.toString(), StyleSpan(Typeface.BOLD))
-                    span(event.created_at.githubTimeAgo(), null)
+                    span(event.created_at.githubTimeAgo())
                 }else{
                     span(event.assignee?.login.toString(), StyleSpan(Typeface.BOLD))
-                    span("self-assigned this", null)
-                    span(event.created_at.githubTimeAgo(), null)
+                    span("self-assigned this")
+                    span(event.created_at.githubTimeAgo())
                 }
             }
             Events.UNASSIGNED -> fancyText {
                 if (event.assignee?.id != event.assigner?.id) {
                     span(event.assignee?.login.toString(), StyleSpan(Typeface.BOLD))
-                    span("was unassigned by", null)
+                    span("was unassigned by")
                     span(event.assigner?.login.toString(), StyleSpan(Typeface.BOLD))
-                    span(event.created_at.githubTimeAgo(), null)
+                    span(event.created_at.githubTimeAgo())
                 } else {
                     span(event.assignee?.login.toString(), StyleSpan(Typeface.BOLD))
-                    span("removed their assignment", null)
-                    span(event.created_at.githubTimeAgo(), null)
+                    span("removed their assignment")
+                    span(event.created_at.githubTimeAgo())
                 }
             }
             Events.LABELED -> fancyText {
                 span(event.actor.login.toString(), StyleSpan(Typeface.BOLD))
                 if(eventMessage.events.size == 1) {
-                    span("added the", null)
+                    span("added the")
                     span(event.label?.name.toString(), LabelSpan(event.label?.color?.colorFromHex()!!, dpToPx(2f)))
-                    span("label ${event.created_at.githubTimeAgo()}", null)
+                    span("label ${event.created_at.githubTimeAgo()}")
                 }else{
-                    span("added", null)
+                    span("added")
                     eventMessage.events.forEach {
                         span(it.label?.name.toString(), LabelSpan(it.label?.color?.colorFromHex()!!, dpToPx(2f)))
                     }
-                    span("labels ${event.created_at.githubTimeAgo()}", null)
+                    span("labels ${event.created_at.githubTimeAgo()}")
                 }
             }
             Events.UNLABELED -> fancyText {
                 span(event.actor.login.toString(), StyleSpan(Typeface.BOLD))
-                span("removed the", null)
+                span("removed the")
                 span(event.label?.name.toString(), LabelSpan(event.label?.color?.colorFromHex()!!, dpToPx(2f)))
-                span("label ${event.created_at.githubTimeAgo()}", null)
+                span("label ${event.created_at.githubTimeAgo()}")
             }
             Events.MILESTONED -> fancyText {
                 span(event.actor.login.toString(), StyleSpan(Typeface.BOLD))
-                span("added this to the", null)
+                span("added this to the")
                 span(event.milestone?.title.toString(), StyleSpan(Typeface.BOLD))
-                span("milestone ${event.created_at.githubTimeAgo()}", null)
+                span("milestone ${event.created_at.githubTimeAgo()}")
             }
             Events.DEMILESTONED -> fancyText {
                 span(event.actor.login.toString(), StyleSpan(Typeface.BOLD))
-                span("removed this from the", null)
+                span("removed this from the")
                 span(event.milestone?.title.toString(), StyleSpan(Typeface.BOLD))
-                span("milestone ${event.created_at.githubTimeAgo()}", null)
+                span("milestone ${event.created_at.githubTimeAgo()}")
             }
             Events.RENAMED -> fancyText {
                 span(event.actor.login.toString(), StyleSpan(Typeface.BOLD))
-                span("renamed this issue ${event.created_at.githubTimeAgo()}", null)
+                span("renamed this issue from")
+                span("${event.rename?.from}", StyleSpan(Typeface.BOLD))
+                span("to")
+                span("${event.rename?.to}", StyleSpan(Typeface.BOLD))
+                span(event.created_at.githubTimeAgo())
             }
             Events.LOCKED -> fancyText {
                 span(event.actor.login.toString(), StyleSpan(Typeface.BOLD))
-                span("locked this issue ${event.created_at.githubTimeAgo()}", null)
+                span("locked this issue ${event.created_at.githubTimeAgo()}")
             }
             Events.UNLOCKED -> fancyText {
                 span(event.actor.login.toString(), StyleSpan(Typeface.BOLD))
-                span("unlocked this issue ${event.created_at.githubTimeAgo()}", null)
+                span("unlocked this issue ${event.created_at.githubTimeAgo()}")
             }
 //            Events.HEAD_REF_DELETED -> ""
 //            Events.HEAD_REF_RESTORED -> ""
             else -> fancyText {
-                span("[${e.name}]", null)
+                span("[${e.name}]")
                 span(event.actor.login.toString(), StyleSpan(Typeface.BOLD))
-                span("modified this issue ${event.created_at.githubTimeAgo()}", null)
+                span("modified this issue ${event.created_at.githubTimeAgo()}")
             }
         }
 
@@ -200,6 +204,7 @@ class EventSpanned{
     val items = arrayListOf<EventSpan>()
 
     fun span(text: String, span: Any?) = items.add(EventSpan(text, span))
+    fun span(text: String) = items.add(EventSpan(text, null))
 
     fun build(): SpannableString {
         val string: String = items.fold("", {

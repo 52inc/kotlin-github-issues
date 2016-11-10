@@ -26,5 +26,6 @@ interface IssueMessengerView: BaseView{
     fun hideLoading()
     fun appendComment(comment: CommentIssueMessage?)
     fun hideInput()
+    fun setEditableLabels(labels: List<Label>?, selectedMap: MutableMap<Label, Boolean>)
 
 }

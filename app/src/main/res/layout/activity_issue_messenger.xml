@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
+    android:id="@+id/root_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="?android:attr/colorBackground"
     >
 
@@ -26,7 +26,7 @@
             >
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/appbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
@@ -244,114 +244,109 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <!--<include-->
-        <!--layout="@layout/layout_markdown_editor"-->
-        <!--android:id="@+id/editor"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="bottom"-->
-        <!--tools:visibility="gone"-->
-        <!--/>-->
-
-    <LinearLayout
+    <include
+        layout="@layout/layout_markdown_editor"
+        android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="?attr/colorAccent"
-        android:elevation="6dp"
-
         android:layout_gravity="bottom"
-        android:gravity="top|end"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="8dp"
-        android:paddingBottom="64dp"
-        >
+        android:visibility="gone"
+        />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-
-            android:padding="8dp"
-            android:gravity="start|center_vertical"
-
-            android:text="Labels"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:fontFamily="sans-serif-medium"
-            android:drawableStart="@drawable/ic_tag"
-            android:drawableTint="@color/white"
-            android:drawablePadding="8dp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-
-            android:padding="8dp"
-            android:gravity="start|center_vertical"
-
-            android:text="Milestones"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:fontFamily="sans-serif-medium"
-            android:drawableStart="@drawable/ic_routes"
-            android:drawableTint="@color/white"
-            android:drawablePadding="8dp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-
-            android:padding="8dp"
-            android:gravity="start|center_vertical"
-
-            android:text="Assignees"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:fontFamily="sans-serif-medium"
-            android:drawableStart="@drawable/ic_person_black_24dp"
-            android:drawableTint="@color/white"
-            android:drawablePadding="8dp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-
-            android:padding="8dp"
-            android:gravity="start|center_vertical"
-
-            android:text="New comment"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:fontFamily="sans-serif-medium"
-            android:drawableStart="@drawable/ic_comment"
-            android:drawableTint="@color/white"
-            android:drawablePadding="8dp"
-            />
-
-
-    </LinearLayout>
+    <include
+        layout="@layout/layout_label_editor"
+        android:id="@+id/label_editor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/normal_padding"
+        android:layout_marginEnd="@dimen/normal_padding"
+        android:layout_marginBottom="@dimen/normal_padding"
         android:src="@drawable/ic_add_black_24dp"
         android:tint="@color/white"
-        app:fabSize="normal"
-        app:rippleColor="?attr/colorPrimary"
-        app:pressedTranslationZ="8dp"
 
-        tools:visibility="gone"
+        app:fabSize="normal"
+        app:elevation="@dimen/z_fab"
+        app:layout_behavior="com.ftinc.gitissues.ui.widget.ScrollAwareFABBehavior"
+        />
+
+    <View
+        android:id="@+id/results_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/scrim"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/issue_actions_container"
+        android:layout_width="448dp"
+        android:layout_height="448dp"
+        android:layout_gravity="bottom|end"
+        android:background="@drawable/fab"
+        android:layout_marginEnd="@dimen/normal_padding"
+        android:layout_marginBottom="@dimen/normal_padding"
+        android:translationX="196dp"
+        android:translationY="196dp"
+        android:elevation="@dimen/z_fab"
+        android:theme="@style/ExpandedFabTheme"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:layout_width="252dp"
+            android:layout_height="252dp"
+            android:layout_gravity="start|top"
+            android:gravity="bottom|end"
+            android:orientation="vertical"
+            android:paddingEnd="8dp">
+
+            <TextView
+                style="@style/Widget.GitIssues.IssueAction"
+                android:id="@+id/action_labels"
+                android:text="@string/action_labels"
+                android:drawableEnd="@drawable/ic_tag"
+                />
+
+            <TextView
+                style="@style/Widget.GitIssues.IssueAction"
+                android:id="@+id/action_milestones"
+                android:text="@string/action_milestones"
+                android:drawableEnd="@drawable/ic_routes"
+                />
+
+            <TextView
+                style="@style/Widget.GitIssues.IssueAction"
+                android:id="@+id/action_assignees"
+                android:text="@string/action_assignees"
+                android:drawableEnd="@drawable/ic_group_black_24dp"
+                />
+
+            <TextView
+                style="@style/Widget.GitIssues.IssueAction"
+                android:id="@+id/action_new_comment"
+                android:text="@string/action_new_comment"
+                android:drawableEnd="@drawable/ic_comment"
+                android:layout_marginBottom="4dp"
+                />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <View
+        android:id="@+id/input_scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorAccent"
+        android:elevation="6dp"
+        android:visibility="gone"
         />
 
 </android.support.design.widget.CoordinatorLayout>
