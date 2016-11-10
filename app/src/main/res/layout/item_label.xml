@@ -12,13 +12,16 @@
         android:outlineProvider="background"
         android:stateListAnimator="@animator/raise"
 
-        android:padding="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="56dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         android:layout_marginStart="@dimen/normal_padding"
         android:layout_marginEnd="@dimen/normal_padding"
         android:layout_marginTop="@dimen/tiny_padding"
         android:layout_marginBottom="@dimen/tiny_padding"
 
-        tools:text="Bug"
+        tools:text="@string/placeholder_lorem_ipsum_long"
         android:textSize="18sp"
         android:textColor="@color/white"
         android:fontFamily="sans-serif-medium"
