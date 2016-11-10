@@ -17,4 +17,7 @@
     <dimen name="fab_size">56dp</dimen>
     <dimen name="fab_radius">28dp</dimen>
 
+    <dimen name="editor_layout_elevation">10dp</dimen>
+    <dimen name="editor_scrim_elevation">11dp</dimen>
+
 </resources>

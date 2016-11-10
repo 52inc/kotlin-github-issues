@@ -11,10 +11,7 @@ import android.text.TextWatcher
 import android.text.method.ScrollingMovementMethod
 import android.transition.TransitionManager
 import android.util.AttributeSet
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import butterknife.bindView

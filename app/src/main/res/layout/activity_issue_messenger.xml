@@ -244,24 +244,6 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include
-        layout="@layout/layout_markdown_editor"
-        android:id="@+id/editor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:visibility="gone"
-        />
-
-    <include
-        layout="@layout/layout_label_editor"
-        android:id="@+id/label_editor"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="bottom"
-        android:visibility="gone"
-        />
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
@@ -275,6 +257,31 @@
         app:fabSize="normal"
         app:elevation="@dimen/z_fab"
         app:layout_behavior="com.ftinc.gitissues.ui.widget.ScrollAwareFABBehavior"
+        />
+
+    <!--
+
+        Editor Overlays
+
+    -->
+
+    <include
+        layout="@layout/layout_markdown_editor"
+        android:id="@+id/editor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
+        android:elevation="@dimen/editor_layout_elevation"
+        />
+
+    <include
+        layout="@layout/layout_label_editor"
+        android:id="@+id/label_editor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom"
+        android:visibility="gone"
         />
 
     <View
@@ -345,7 +352,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?attr/colorAccent"
-        android:elevation="6dp"
+        android:elevation="@dimen/editor_scrim_elevation"
         android:visibility="gone"
         />
 

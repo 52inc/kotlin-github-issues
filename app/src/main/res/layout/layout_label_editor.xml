@@ -1,26 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.ftinc.gitissues.ui.widget.LabelEditor
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="?android:colorBackground"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+    android:elevation="@dimen/editor_layout_elevation"
+    android:outlineProvider="background"
+    android:descendantFocusability="blocksDescendants">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="@dimen/appbar_elevation"
-        app:elevation="@dimen/appbar_elevation">
+        android:elevation="6dp"
+        app:elevation="6dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="?attr/actionBarSize"
+            android:elevation="6dp"
+            app:elevation="6dp"
 
             app:title="@string/action_labels"
             app:navigationIcon="@drawable/ic_close_black_24dp"
@@ -34,8 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar_layout"
 
+        android:iconifiedByDefault="false"
         android:queryHint="Filter"
-        app:queryHint="Filter"
         />
 
     <View

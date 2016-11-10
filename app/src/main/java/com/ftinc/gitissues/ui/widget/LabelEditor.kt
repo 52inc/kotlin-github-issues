@@ -5,6 +5,7 @@ import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.widget.RelativeLayout
 import android.widget.SearchView
 import butterknife.bindView
@@ -61,6 +62,9 @@ class LabelEditor : RelativeLayout,SearchView.OnQueryTextListener {
 
         // Setup toolbar
         toolbar.inflateMenu(R.menu.label_editor)
+        toolbar.setNavigationOnClickListener {
+            hide()
+        }
         toolbar.setOnMenuItemClickListener {
             when(it.itemId){
                 R.id.action_save -> {

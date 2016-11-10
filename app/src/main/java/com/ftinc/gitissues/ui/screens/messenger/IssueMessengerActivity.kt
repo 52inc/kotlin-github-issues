@@ -213,9 +213,12 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
     }
 
     override fun onBackPressed() {
-        if(editor.visibility == View.VISIBLE){
+        if(editor.visibility == View.VISIBLE) {
             fab.visible()
             editor.hide()
+        }else if(labelEditor.visibility == View.VISIBLE){
+            fab.visible()
+            labelEditor.hide()
         }else if(issueActionContainer.visibility == View.VISIBLE) {
             TransitionManager.beginDelayedTransition(rootLayout, getTransition(R.transition.search_hide_confirm))
             issueActionContainer.gone()
@@ -237,6 +240,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
                     override fun onTransitionEnd(transition: Transition?) {
                         issueActionContainer.gone()
                         scrim.gone()
+                        fab.visible()
                         inputScrim.animate()
                                 .alpha(0f)
                                 .setInterpolator(AnimUtils.getFastOutLinearInInterpolator(this@IssueMessengerActivity))
@@ -260,6 +264,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
                     override fun onTransitionEnd(transition: Transition?) {
                         issueActionContainer.gone()
                         scrim.gone()
+                        fab.visible()
                         inputScrim.animate()
                                 .alpha(0f)
                                 .setInterpolator(AnimUtils.getFastOutLinearInInterpolator(this@IssueMessengerActivity))

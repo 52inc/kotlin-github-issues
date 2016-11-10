@@ -1,5 +1,7 @@
 package com.ftinc.gitissues.ui.adapter.viewholder
 
+import android.graphics.Color
+import android.support.v4.graphics.ColorUtils
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,7 @@ import butterknife.bindView
 import com.ftinc.gitissues.R
 import com.ftinc.gitissues.api.Label
 import com.ftinc.gitissues.ui.widget.LabelView
+import com.ftinc.gitissues.util.color
 import com.ftinc.gitissues.util.colorFromHex
 
 /**
@@ -36,6 +39,17 @@ class LabelViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
         name.labelColor = label.color.colorFromHex()
         name.setOnClickListener(clickListener)
         checked.isChecked = isChecked
+
+        val contrast = ColorUtils.calculateContrast(Color.WHITE, name.labelColor)
+        if(contrast < 3.0){
+            val color = itemView.color(R.color.black87)
+            name.setTextColor(color)
+            checked.buttonTintList = com.ftinc.gitissues.util.ColorUtils.colorToStateList(color)
+        }else{
+            name.setTextColor(Color.WHITE)
+            checked.buttonTintList = com.ftinc.gitissues.util.ColorUtils.colorToStateList(Color.WHITE)
+        }
+
     }
 
 }
