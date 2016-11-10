@@ -126,10 +126,12 @@
         />
 
     <ProgressBar
+        style="?android:attr/progressBarStyleSmall"
         android:id="@+id/loading"
         android:layout_width="wrap_content"
         android:layout_height="56dp"
         android:layout_toStartOf="@+id/action_send"
+        android:elevation="4dp"
         android:visibility="gone"
         />
 
