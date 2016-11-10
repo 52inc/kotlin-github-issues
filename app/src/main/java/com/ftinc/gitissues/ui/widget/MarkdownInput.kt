@@ -21,8 +21,7 @@ import butterknife.bindView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ftinc.gitissues.R
-import com.ftinc.gitissues.util.ImageSpanTarget
-import com.ftinc.gitissues.util.ImeUtils
+import com.ftinc.gitissues.util.*
 import timber.log.Timber
 
 /**
@@ -40,17 +39,25 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
      *
      */
 
+    val LINE_NUMBER_REGEX: Regex = Regex("^\\s*?[0-9]+\\.")
+    val BULLET_REGEX: Regex = Regex("^\\*(?!\\*)")
+    val INDENT_REGEX: Regex = Regex("^(\\s{4}|\\t)")
+    val MULTI_INDENT_REGEX: Regex = Regex("^(\\s{4}|\\t)+")
+    val INDENT: String = "    "
+
     val actionScrollView: HorizontalScrollView by bindView(R.id.action_scrollview)
     val actionLayout: LinearLayout by bindView(R.id.action_layout)
     val input: EditText by bindView(R.id.input)
     val preview: TextView by bindView(R.id.preview)
     val actionSend: ImageView by bindView(R.id.action_send)
+    val loading: ProgressBar by bindView(R.id.loading)
     val inputCompact: TextView by bindView(R.id.input_placeholder)
     val tabs: TabLayout by bindView(R.id.tabs)
 
     var expanded: Boolean = false
 
     private var bypass: Bypass
+    private var onMarkdownSubmitListener: OnMarkdownSubmitListener? = null
 
     /***********************************************************************************************
      *
@@ -62,6 +69,10 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
         bypass = Bypass(context, Bypass.Options())
+    }
+
+    fun setOnMarkdownSubmitListener(listener: OnMarkdownSubmitListener){
+        onMarkdownSubmitListener = listener
     }
 
     /***********************************************************************************************
@@ -81,7 +92,10 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
         }
 
         input.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(s: Editable?) {}
+            override fun afterTextChanged(s: Editable?) {
+                actionSend.isEnabled = !s.isNullOrBlank()
+            }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -89,37 +103,47 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
                     // Check the previous line
                     val buffer: Editable = input.text
                     val layout: Layout = input.layout
-                    val start = Selection.getSelectionStart(buffer)
-                    val startLine = layout.getLineForOffset(start)
+                    val startOffset = Selection.getSelectionStart(buffer)
+                    val startLine = layout.getLineForOffset(startOffset)
 
                     if(startLine > 0){
                         val prevLine: String = buffer.lines()[startLine-1]
 
                         Timber.i("Checking previous line: $prevLine")
 
-                        val lineNumberRegex = Regex("^[0-9]+\\.")
-                        val bulletRegex = Regex("^\\*(?!\\*)")
-
-                        if(prevLine.contains(lineNumberRegex)){
-                            var num = lineNumberRegex.find(prevLine)?.groupValues?.get(0)
+                        if(prevLine.contains(LINE_NUMBER_REGEX)){
+                            var num = LINE_NUMBER_REGEX.find(prevLine)?.groupValues?.get(0)
 
                             // Now determine if the previous line is empty, or not
                             val isEmpty = prevLine.replace(num ?: "", "").isNullOrBlank()
                             if(!isEmpty) {
-                                num = num?.replace(".", "")
+                                num = num?.replace(".", "")?.trim()
                                 val lineNumber = "${num?.toInt() as Int + 1}. "
-                                buffer.insert(start, lineNumber)
+
+                                // Now determine if that previous line has an indent(s) and then prepend the amount to the newline
+                                if(prevLine.contains(MULTI_INDENT_REGEX)){
+                                    val indent = MULTI_INDENT_REGEX.find(prevLine)?.value
+                                    buffer.insert(startOffset, "$indent$lineNumber")
+                                }else {
+                                    buffer.insert(startOffset, lineNumber)
+                                }
+
                             }else{
                                 // Delete the previous blank line number
                                 val s = layout.getLineStart(startLine-1)
                                 val e = s + (num?.length ?: 0)
                                 buffer.delete(s, e)
                             }
-                        }else if(prevLine.contains(bulletRegex)){
-                            var num = bulletRegex.find(prevLine)?.groupValues?.get(0)
+                        }else if(prevLine.contains(BULLET_REGEX)){
+                            var num = BULLET_REGEX.find(prevLine)?.groupValues?.get(0)
                             val isEmpty = prevLine.replace(num ?: "", "").isNullOrBlank()
                             if(!isEmpty) {
-                                buffer.insert(start, "* ")
+                                if(prevLine.contains(MULTI_INDENT_REGEX)){
+                                    val indent = MULTI_INDENT_REGEX.find(prevLine)?.value
+                                    buffer.insert(startOffset, "$indent$* ")
+                                }else {
+                                    buffer.insert(startOffset, "* ")
+                                }
                             }else{
                                 val s = layout.getLineStart(startLine-1)
                                 val e = s + (num?.length ?: 0)
@@ -131,60 +155,11 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
             }
         })
 
-        input.setOnKeyListener { view, i, keyEvent ->
-            Timber.d("OnKeyListener($i, ${keyEvent.action})")
-            if(keyEvent.action == KeyEvent.ACTION_DOWN){
-                when(i){
-                    KeyEvent.KEYCODE_ENTER -> {
-
-                    }
-                    else -> false
-                }
-            }
-            false
+        // setup action send input
+        actionSend.setOnClickListener {
+            onMarkdownSubmitListener?.onMarkdownSubmit(input.text.toString())
+            loading.visible()
         }
-
-        input.setOnEditorActionListener { textView, i, keyEvent ->
-            Timber.d("OnEditorAction($i, ${keyEvent.action})")
-            if(i == EditorInfo.IME_ACTION_DONE){
-
-                // Check the previous line
-                val buffer: Editable = input.text
-                val layout: Layout = input.layout
-                val start = Selection.getSelectionStart(buffer)
-                val startLine = layout.getLineForOffset(start)
-
-                if(startLine > 0){
-                    val prevLine: String = buffer.lines()[startLine-1]
-
-                    Timber.i("Checking previous line: $prevLine")
-
-                    val lineNumberRegex = Regex("^[0-9]+\\.")
-                    val bulletRegex = Regex("^\\*")
-
-                    if(prevLine.contains(lineNumberRegex)){
-                        var num = lineNumberRegex.find(prevLine)?.groupValues?.get(0)
-                        num = num?.replace(".", "")
-                        val lineNumber = "${num?.toInt() as Int + 1}. "
-                        buffer.insert(start, lineNumber)
-                    }else if(prevLine.contains(bulletRegex)){
-                        buffer.insert(start, "* ")
-                    }
-
-                    true
-                }
-
-                false
-            }
-            false
-        }
-
-//        input.setOnFocusChangeListener { view, b ->
-//            if(!b){
-//                ImeUtils.hideIme(view)
-//                hide()
-//            }
-//        }
 
         tabs.addOnTabSelectedListener(this)
         preview.movementMethod = ScrollingMovementMethod()
@@ -197,7 +172,15 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
             view.setImageResource(it.resId)
             view.tag = it
             view.setOnClickListener(this)
+            view.setOnLongClickListener {
+                val t: Toast = Toast.makeText(context, (it.tag as Action).name, Toast.LENGTH_SHORT)
+                Tools.positionToast(t, it, 0, 0)
+                t.show()
+                true
+            }
         }
+
+
 
     }
 
@@ -232,22 +215,18 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
     fun show(){
         expanded = true
         TransitionManager.beginDelayedTransition(parent as ViewGroup)
-        actionScrollView.visibility = View.VISIBLE
-        input.visibility = View.VISIBLE
-        preview.visibility = View.GONE
-        tabs.visibility = View.VISIBLE
+        Tools.visibility(true, actionScrollView, input, tabs)
+        Tools.visibility(false, preview, inputCompact)
         tabs.setSelectedTabIndicatorColor(0)
-        inputCompact.visibility = View.GONE
+        actionSend.isEnabled = input.text.isNullOrBlank()
     }
 
     fun hide(){
         expanded = false
         TransitionManager.beginDelayedTransition(parent as ViewGroup)
-        actionScrollView.visibility = View.GONE
-        input.visibility = View.GONE
-        preview.visibility = View.GONE
-        tabs.visibility = View.GONE
-        inputCompact.visibility = View.VISIBLE
+        Tools.visibility(false, actionScrollView, input, preview, tabs, loading)
+        Tools.visibility(true, inputCompact)
+        actionSend.isEnabled = false
     }
 
     fun showPreview(){
@@ -262,39 +241,40 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
                     .into(ImageSpanTarget(preview, imageLoadingSpan))
         })
 
-        input.visibility = View.INVISIBLE
-        preview.visibility = View.VISIBLE
+        input.invisible()
+        preview.visible()
     }
 
     fun hidePreview(){
         TransitionManager.beginDelayedTransition(parent as ViewGroup)
-        input.visibility = View.VISIBLE
-        preview.visibility = View.INVISIBLE
+        input.visible()
+        preview.invisible()
     }
 
     private fun handleAction(action: Action){
-        val buffer: Editable = input.text
-        val start = Selection.getSelectionStart(buffer)
-        val end = Selection.getSelectionEnd(buffer)
+        if(input.visibility == View.VISIBLE) {
+            val editorAction: EditorAction = when (action) {
+                Action.BOLD -> WrapEditorAction("**")
+                Action.ITALIC -> WrapEditorAction("_")
+                Action.STRIKETHROUGH -> WrapEditorAction("~~")
+                Action.QUOTE -> LineWrapEditorAction("> ")
+                Action.CODE -> MultilineWrapEditorAction("`", "```")
+                Action.LINK -> LinkEditorAction()
+                Action.MENTION -> ReplaceEditorAction("@")
+                Action.LIST_BULLETED -> LineWrapEditorAction("*")
+                Action.LIST_NUMBERED -> NumberListEditorAction()
+                Action.H1 -> LineWrapEditorAction("#")
+                Action.H2 -> LineWrapEditorAction("##")
+                Action.H3 -> LineWrapEditorAction("###")
+                Action.H4 -> LineWrapEditorAction("####")
+                Action.H5 -> LineWrapEditorAction("#####")
+                Action.H6 -> LineWrapEditorAction("######")
+                Action.INDENT_LEFT -> IndentEditorAction(false)
+                Action.INDENT_RIGHT -> IndentEditorAction(true)
+            }
 
-        val editorAction: EditorAction = when(action){
-            Action.BOLD -> WrapEditorAction("**")
-            Action.ITALIC -> WrapEditorAction("_")
-            Action.STRIKETHROUGH -> WrapEditorAction("~~")
-            Action.QUOTE -> LineWrapEditorAction("> ")
-            Action.CODE -> MultilineWrapEditorAction("`", "```")
-            Action.MENTION -> ReplaceEditorAction("@")
-            Action.LIST_BULLETED -> LineWrapEditorAction("*")
-            Action.LIST_NUMBERED -> NumberListEditorAction()
-            Action.H1 -> LineWrapEditorAction("#")
-            Action.H2 -> LineWrapEditorAction("##")
-            Action.H3 -> LineWrapEditorAction("###")
-            Action.H4 -> LineWrapEditorAction("####")
-            Action.H5 -> LineWrapEditorAction("#####")
-            Action.H6 -> LineWrapEditorAction("######")
+            editorAction.apply(input)
         }
-
-        editorAction.apply(input)
     }
 
     /***********************************************************************************************
@@ -309,7 +289,8 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
         STRIKETHROUGH(R.drawable.ic_format_strikethrough),
 //        UNDERLINE(R.drawable.ic_format_underline),
         QUOTE(R.drawable.ic_format_quote),
-        CODE(R.drawable.ic_code_brackets),
+        CODE(R.drawable.ic_code_braces),
+        LINK(R.drawable.ic_link_variant),
         MENTION(R.drawable.ic_at),
         LIST_BULLETED(R.drawable.ic_format_list_bulleted),
         LIST_NUMBERED(R.drawable.ic_format_list_numbers),
@@ -318,11 +299,92 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
         H3(R.drawable.ic_format_header_3),
         H4(R.drawable.ic_format_header_4),
         H5(R.drawable.ic_format_header_5),
-        H6(R.drawable.ic_format_header_6)
+        H6(R.drawable.ic_format_header_6),
+        INDENT_RIGHT(R.drawable.ic_format_indent_increase),
+        INDENT_LEFT(R.drawable.ic_format_indent_decrease)
+
     }
 
     abstract class EditorAction(val char: String){
         abstract fun apply(input: EditText)
+    }
+
+    class LinkEditorAction : EditorAction("") {
+        override fun apply(input: EditText) {
+            val buffer = input.text
+            val layout = input.layout
+            val start = Selection.getSelectionStart(buffer)
+            val end = Selection.getSelectionEnd(buffer)
+            val startLine = layout.getLineForOffset(start)
+            val endLine = layout.getLineForOffset(end)
+
+            if(start == end){
+                if(start != -1){
+                    buffer.insert(start, "[]()")
+                    input.setSelection(start + 1)
+                }else{
+                    val len = buffer.length
+                    buffer.insert(len, "[]()")
+                    input.setSelection(len+1)
+                }
+            }else{
+                if(startLine == endLine){
+                    buffer.insert(end, "]()")
+                    buffer.insert(start, "[")
+                    input.setSelection(end+3)
+                }else{
+                    buffer.replace(start, end, "[]()")
+                    input.setSelection(start+1)
+                }
+            }
+        }
+
+    }
+
+    inner class IndentEditorAction(val increase: Boolean): EditorAction("") {
+        override fun apply(input: EditText) {
+            val buffer = input.text
+            val layout = input.layout
+            val start = Selection.getSelectionStart(buffer)
+            val end = Selection.getSelectionEnd(buffer)
+            val startLine = layout.getLineForOffset(start)
+            val endLine = layout.getLineForOffset(end)
+
+            if(start != -1){
+                if(start == end){
+                    // if increase, add 4 spaces to start of line
+                    if(increase) {
+                        val s = layout.getLineStart(startLine)
+                        buffer.insert(s, INDENT)
+                    }else{
+                        val line = buffer.lines()[startLine]
+                        if(line.contains(INDENT_REGEX)){
+                            val match = INDENT_REGEX.find(line)?.groupValues?.get(0)
+
+                            val s = layout.getLineStart(startLine)
+                            buffer.delete(s, s + (match?.length ?: 0))
+                        }
+                    }
+                }else{
+                    if(increase){
+                        (endLine downTo startLine)
+                                .map { layout.getLineStart(it) }
+                                .forEach { buffer.insert(it, INDENT) }
+                    }else{
+                        for(i in endLine downTo startLine){
+                            val line = buffer.lines()[i]
+                            if(line.contains(INDENT_REGEX)){
+                                val match = INDENT_REGEX.find(line)?.groupValues?.get(0)
+
+                                val s = layout.getLineStart(i)
+                                buffer.delete(s, s + (match?.length ?: 0))
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
     }
 
     class WrapEditorAction(char: String) : EditorAction(char) {
@@ -335,10 +397,10 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
             if(start == end){
                 if(start != -1){
                     buffer.insert(start, "$char$char")
-                    input.setSelection(start+1)
+                    input.setSelection(start+char.length)
                 }else{
                     buffer.insert(buffer.length, "$char$char")
-                    input.setSelection(buffer.length-1)
+                    input.setSelection(buffer.length-char.length)
                 }
             }else{
                 buffer.insert(end, char)
@@ -357,10 +419,10 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
             if(start == end){
                 if(start != -1){
                     buffer.insert(start, "$char$char")
-                    input.setSelection(start+1)
+                    input.setSelection(start+char.length)
                 }else{
                     buffer.insert(buffer.length, "$char$char")
-                    input.setSelection(buffer.length-1)
+                    input.setSelection(buffer.length-char.length)
                 }
             }else{
                 // Insert line at line below end
@@ -449,7 +511,7 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
 
     }
 
-    class NumberListEditorAction: LineWrapEditorAction("1."){
+    inner class NumberListEditorAction: LineWrapEditorAction("1."){
 
         private var currentNumber: Int = 1
 
@@ -466,10 +528,9 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
                 Timber.i("Checking previous line: $prevLine")
 
                 // Use regex to tell if line starts with number
-                val regex = Regex("^[0-9]+\\.")
-                if(prevLine.contains(regex)){
+                if(prevLine.contains(LINE_NUMBER_REGEX)){
                     // Huzzah, we found previous current number, adjust current number to that number
-                    var num = regex.find(prevLine)?.groupValues?.get(0)
+                    var num = LINE_NUMBER_REGEX.find(prevLine)?.groupValues?.get(0)
                     num = num?.replace(".", "")
 
                     Timber.i("Regex matched previous line($prevLine) with ($num)")
@@ -485,6 +546,10 @@ class MarkdownInput: RelativeLayout, View.OnClickListener, TabLayout.OnTabSelect
             super.apply(input)
         }
 
+    }
+
+    interface OnMarkdownSubmitListener{
+        fun onMarkdownSubmit(markdown: String)
     }
 
 }

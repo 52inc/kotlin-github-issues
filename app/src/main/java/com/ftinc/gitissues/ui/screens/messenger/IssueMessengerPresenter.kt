@@ -6,4 +6,5 @@ package com.ftinc.gitissues.ui.screens.messenger
 
 interface IssueMessengerPresenter{
     fun loadIssueContent()
+    fun createComment(markdown: String)
 }

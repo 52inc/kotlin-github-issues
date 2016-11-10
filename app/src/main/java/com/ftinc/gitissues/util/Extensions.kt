@@ -36,6 +36,16 @@ fun RecyclerView.ViewHolder.dipToPx(dp: Float) : Int = Utils.dipToPx(this.itemVi
 
 
 fun View.drawable(@DrawableRes resId: Int) : Drawable = ContextCompat.getDrawable(this.context, resId)
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}
+fun View.invisible(){
+    this.visibility = View.INVISIBLE
+}
+fun View.gone(){
+    this.visibility = View.GONE
+}
+
 fun View.setVisible(visible: Boolean) {
     this.visibility = if(visible) View.VISIBLE else View.GONE
 }

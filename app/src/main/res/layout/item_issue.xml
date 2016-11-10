@@ -54,6 +54,7 @@
         android:layout_marginBottom="@dimen/normal_padding"
 
         tools:text="So when I click the button, it just explodes. No warning. No crash. Phone literally exploded, Galaxy Note 7 style."
+        android:maxLines="5"
         android:textColor="?android:attr/textColorTertiary"
         />
 

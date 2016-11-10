@@ -31,6 +31,7 @@ import com.ftinc.gitissues.di.components.AppComponent
 import com.ftinc.gitissues.ui.BaseActivity
 import com.ftinc.gitissues.ui.adapter.MessengerAdapter
 import com.ftinc.gitissues.ui.adapter.delegate.BaseIssueMessage
+import com.ftinc.gitissues.ui.adapter.delegate.CommentIssueMessage
 import com.ftinc.gitissues.ui.widget.LabelView
 import com.ftinc.gitissues.ui.widget.MarkdownInput
 import com.ftinc.gitissues.util.RecyclerViewUtils
@@ -152,6 +153,12 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
         refreshLayout.setOnRefreshListener {
             presenter.loadIssueContent()
         }
+
+        editor.setOnMarkdownSubmitListener(object : MarkdownInput.OnMarkdownSubmitListener{
+            override fun onMarkdownSubmit(markdown: String) {
+                presenter.createComment(markdown)
+            }
+        })
     }
 
     override fun onResume() {
@@ -186,6 +193,10 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
 
     override fun hideLoading() {
         refreshLayout.isRefreshing = false
+    }
+
+    override fun hideInput() {
+        editor.hide()
     }
 
     override fun setStatus(status: String, @ColorRes color: Int) {
@@ -232,6 +243,12 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView{
     override fun setMessengerItems(items: List<BaseIssueMessage>) {
         RecyclerViewUtils.applyDynamicChanges(adapter, items)
     }
+
+    override fun appendComment(comment: CommentIssueMessage?) {
+        adapter.add(comment as BaseIssueMessage)
+        recycler.scrollToPosition(adapter.itemCount-1)
+    }
+
 
 
 

@@ -18,6 +18,24 @@ class IssueMessengerPresenterImpl(val issue: Issue,
                                   val api: GithubAPI,
                                   val view: IssueMessengerView): IssueMessengerPresenter{
 
+    override fun createComment(markdown: String) {
+
+        // Construct body object
+        val repo = issue.getRepository()
+        val newComment = CommentEdit(markdown)
+        api.createComment(repo.owner, repo.repo, issue.number, newComment)
+                .map(::CommentIssueMessage)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ comment ->
+                    view.hideInput()
+                    view.appendComment(comment)
+                }, { error ->
+                    view.hideInput()
+                    view.showSnackBar(error)
+                })
+
+    }
+
     override fun loadIssueContent() {
 
         // determine status color

@@ -238,17 +238,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            android:paddingBottom="8dp"
+            android:paddingBottom="64dp"
             android:clipToPadding="false"
             />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/layout_markdown_editor"
+    <include
+        layout="@layout/layout_markdown_editor"
         android:id="@+id/editor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        tools:visibility="gone"
         />
 
 </android.support.design.widget.CoordinatorLayout>

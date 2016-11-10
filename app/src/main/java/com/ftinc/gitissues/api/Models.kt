@@ -93,6 +93,16 @@ data class Repo(val owner: String, val repo: String)
 data class PR(val url: String)
 
 /**
+ * An issue edit object to make changes to an issue
+ */
+data class IssueEdit(val title: String,
+                     val body: String,
+                     val state: String,
+                     val milestone: Int?,
+                     val labels: List<String>?,
+                     val assignees: List<String>?)
+
+/**
  * Label Model
  */
 @PaperParcel
@@ -103,13 +113,19 @@ data class Label(val id: Long,
                  val isDefault: Boolean)
 
 /**
+ * Label editing model
+ */
+data class LabelEdit(val name: String,
+                     val color: String)
+
+/**
  * Milestone Model
  */
 @PaperParcel
 data class Milestone(val id: Long,
                      val number: Int,
                      val title: String,
-                     val state: String,
+                     val state: String?,
                      val description: String,
                      val creator: User,
                      val open_issues: Int,
@@ -118,6 +134,11 @@ data class Milestone(val id: Long,
                      val updated_at: String,
                      val closed_at: String?,
                      val due_on: String?)
+
+data class MilestoneEdit(val title: String,
+                         val state: String?,
+                         val description: String,
+                         val due_on: String?)
 
 /**
  * Issue Comment Model
@@ -130,6 +151,12 @@ data class Comment(val id: Long,
                    val created_at: String,
                    val updated_at: String?,
                    val reactions: Reactions)
+
+/**
+ * The new comment object to create a new comment on an
+ * issue with
+ */
+data class CommentEdit(val body: String)
 
 /**
  * Reactions Model
