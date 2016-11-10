@@ -16,6 +16,7 @@ import com.ftinc.gitissues.R
 import com.ftinc.gitissues.api.Event
 import com.ftinc.gitissues.api.Events
 import com.ftinc.gitissues.api.githubTimeAgo
+import com.ftinc.gitissues.ui.span.LabelSpan
 import com.ftinc.gitissues.util.*
 import com.hannesdorfmann.adapterdelegates2.AdapterDelegate
 

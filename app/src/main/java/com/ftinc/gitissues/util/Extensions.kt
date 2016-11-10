@@ -23,7 +23,11 @@ import java.util.*
 
 
 fun View.dpToPx(dp: Float) : Float = Utils.dpToPx(this.context, dp)
-fun View.dipToPx(dp: Float) : Int = Utils.dipToPx(this.context, dp)
+fun View.dipToPx(dp: Float) : Int = Utils.dipToPx(this.context, dp)@ColorInt fun View.color(@ColorRes resId: Int) : Int = ContextCompat.getColor(this.context, resId)
+fun View.drawable(@DrawableRes resId: Int) : Drawable = ContextCompat.getDrawable(this.context, resId)
+fun View.visible() { this.visibility = View.VISIBLE }
+fun View.invisible(){ this.visibility = View.INVISIBLE }
+fun View.gone(){ this.visibility = View.GONE }
 
 fun Context.dpToPx(dp: Float) : Float = Utils.dpToPx(this, dp)
 fun Context.dipToPx(dp: Float) : Int = Utils.dipToPx(this, dp)
@@ -32,19 +36,7 @@ fun RecyclerView.ViewHolder.dpToPx(dp: Float) : Float = Utils.dpToPx(this.itemVi
 fun RecyclerView.ViewHolder.dipToPx(dp: Float) : Int = Utils.dipToPx(this.itemView.context, dp)
 @ColorInt fun RecyclerView.ViewHolder.color(@ColorRes resId: Int) : Int = ContextCompat.getColor(this.itemView.context, resId)
 
-@ColorInt fun View.color(@ColorRes resId: Int) : Int = ContextCompat.getColor(this.context, resId)
 
-
-fun View.drawable(@DrawableRes resId: Int) : Drawable = ContextCompat.getDrawable(this.context, resId)
-fun View.visible() {
-    this.visibility = View.VISIBLE
-}
-fun View.invisible(){
-    this.visibility = View.INVISIBLE
-}
-fun View.gone(){
-    this.visibility = View.GONE
-}
 
 fun View.setVisible(visible: Boolean) {
     this.visibility = if(visible) View.VISIBLE else View.GONE

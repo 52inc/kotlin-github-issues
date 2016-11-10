@@ -244,12 +244,113 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <include
-        layout="@layout/layout_markdown_editor"
-        android:id="@+id/editor"
+    <!--<include-->
+        <!--layout="@layout/layout_markdown_editor"-->
+        <!--android:id="@+id/editor"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--tools:visibility="gone"-->
+        <!--/>-->
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="?attr/colorAccent"
+        android:elevation="6dp"
+
         android:layout_gravity="bottom"
+        android:gravity="top|end"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="64dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+
+            android:padding="8dp"
+            android:gravity="start|center_vertical"
+
+            android:text="Labels"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-medium"
+            android:drawableStart="@drawable/ic_tag"
+            android:drawableTint="@color/white"
+            android:drawablePadding="8dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+
+            android:padding="8dp"
+            android:gravity="start|center_vertical"
+
+            android:text="Milestones"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-medium"
+            android:drawableStart="@drawable/ic_routes"
+            android:drawableTint="@color/white"
+            android:drawablePadding="8dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+
+            android:padding="8dp"
+            android:gravity="start|center_vertical"
+
+            android:text="Assignees"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-medium"
+            android:drawableStart="@drawable/ic_person_black_24dp"
+            android:drawableTint="@color/white"
+            android:drawablePadding="8dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+
+            android:padding="8dp"
+            android:gravity="start|center_vertical"
+
+            android:text="New comment"
+            android:textSize="18sp"
+            android:textColor="@color/white"
+            android:fontFamily="sans-serif-medium"
+            android:drawableStart="@drawable/ic_comment"
+            android:drawableTint="@color/white"
+            android:drawablePadding="8dp"
+            />
+
+
+    </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/normal_padding"
+        android:src="@drawable/ic_add_black_24dp"
+        android:tint="@color/white"
+        app:fabSize="normal"
+        app:rippleColor="?attr/colorPrimary"
+        app:pressedTranslationZ="8dp"
+
         tools:visibility="gone"
         />
 

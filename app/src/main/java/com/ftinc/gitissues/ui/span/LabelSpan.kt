@@ -1,4 +1,4 @@
-package com.ftinc.gitissues.util
+package com.ftinc.gitissues.ui.span
 
 import android.graphics.Canvas
 import android.graphics.Color
