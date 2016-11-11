@@ -5,7 +5,10 @@ import android.content.res.TypedArray
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
+import android.graphics.drawable.LevelListDrawable
 import android.graphics.drawable.ShapeDrawable
+import android.support.v4.graphics.ColorUtils
 import android.util.AttributeSet
 import android.widget.TextView
 import com.ftinc.gitissues.R
@@ -41,6 +44,14 @@ class LabelView : TextView{
     constructor(context: Context, label: Label) : super(context) {
         labelColor = label.color.colorFromHex()
         text = label.name
+
+        if(ColorUtils.calculateContrast(Color.WHITE, labelColor) < 3.0){
+            val color = color(R.color.black87)
+            setTextColor(color)
+        }else{
+            setTextColor(Color.WHITE)
+        }
+
         initialize()
     }
 
@@ -66,10 +77,11 @@ class LabelView : TextView{
 
         // Setup text constraints
         val bg:Drawable = drawable(R.drawable.dr_label_background)
+        val bgOutline: Drawable = drawable(R.drawable.dr_label_background_outline)
         bg.setColorFilter(labelColor, PorterDuff.Mode.SRC_ATOP)
-        background = bg
 
-        setTextColor(Color.WHITE)
+        val levelListBg: LayerDrawable = LayerDrawable(arrayOf(bg, bgOutline))
+        background = levelListBg
     }
 
     fun normalize(value: Int, default: Int): Int = if(default > value) default else value

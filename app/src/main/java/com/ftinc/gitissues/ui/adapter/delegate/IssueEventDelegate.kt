@@ -137,12 +137,12 @@ class EventViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
                 span(event.actor.login.toString(), StyleSpan(Typeface.BOLD))
                 if(eventMessage.events.size == 1) {
                     span("added the")
-                    span(event.label?.name.toString(), LabelSpan(event.label?.color?.colorFromHex()!!, dpToPx(2f)))
+                    span(event.label?.name.toString(), LabelSpan(itemView.context, event.label?.color?.colorFromHex()!!))
                     span("label ${event.created_at.githubTimeAgo()}")
                 }else{
                     span("added")
                     eventMessage.events.forEach {
-                        span(it.label?.name.toString(), LabelSpan(it.label?.color?.colorFromHex()!!, dpToPx(2f)))
+                        span(it.label?.name.toString(), LabelSpan(itemView.context, it.label?.color?.colorFromHex()!!))
                     }
                     span("labels ${event.created_at.githubTimeAgo()}")
                 }
@@ -150,7 +150,7 @@ class EventViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
             Events.UNLABELED -> fancyText {
                 span(event.actor.login.toString(), StyleSpan(Typeface.BOLD))
                 span("removed the")
-                span(event.label?.name.toString(), LabelSpan(event.label?.color?.colorFromHex()!!, dpToPx(2f)))
+                span(event.label?.name.toString(), LabelSpan(itemView.context, event.label?.color?.colorFromHex()!!))
                 span("label ${event.created_at.githubTimeAgo()}")
             }
             Events.MILESTONED -> fancyText {

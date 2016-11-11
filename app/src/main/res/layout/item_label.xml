@@ -25,10 +25,6 @@
         android:textSize="18sp"
         android:textColor="@color/white"
         android:fontFamily="sans-serif-medium"
-        android:shadowColor="@color/black26"
-        android:shadowDx="2"
-        android:shadowDy="2"
-        android:shadowRadius="2"
         app:lv_color="@color/red_400"
         />
 

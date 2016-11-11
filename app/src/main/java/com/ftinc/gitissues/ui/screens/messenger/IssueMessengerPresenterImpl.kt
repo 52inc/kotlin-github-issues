@@ -65,7 +65,7 @@ class IssueMessengerPresenterImpl(var issue: Issue,
                 BiFunction<List<Comment>, List<Event>, List<BaseIssueMessage>> { t1, t2 ->
             val items: ArrayList<BaseIssueMessage> = ArrayList()
             items.addAll(t1.map(::CommentIssueMessage))
-            items.addAll(transformEvents(t2))
+            items.addAll(t2.map(::EventIssueMessage)) //transformEvents(t2))
             items
         })
         .flatMap { Observable.fromIterable(it) }

@@ -39,6 +39,7 @@ import com.ftinc.gitissues.ui.BaseActivity
 import com.ftinc.gitissues.ui.adapter.MessengerAdapter
 import com.ftinc.gitissues.ui.adapter.delegate.BaseIssueMessage
 import com.ftinc.gitissues.ui.adapter.delegate.CommentIssueMessage
+import com.ftinc.gitissues.ui.widget.FlowLayout
 import com.ftinc.gitissues.ui.widget.LabelEditor
 import com.ftinc.gitissues.ui.widget.LabelView
 import com.ftinc.gitissues.ui.widget.MarkdownEditor
@@ -91,7 +92,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
     val ownerName: TextView by bindView(R.id.owner_name)
     val openDate: TextView by bindView(R.id.open_date)
     val openedLabel: TextView by bindView(R.id.opened_label)
-    val labelContainer: LinearLayout by bindView(R.id.label_container)
+    val labelContainer: FlowLayout by bindView(R.id.label_container)
 
     val refreshLayout: SwipeRefreshLayout by bindView(R.id.refresh_layout)
     val recycler: RecyclerView by bindView(R.id.recycler)
@@ -351,8 +352,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
         labelContainer.removeAllViews()
         labels.map { LabelView(this, it) }
                 .forEach {
-                    val lp: LinearLayout.LayoutParams  = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                    lp.marginEnd = Utils.dipToPx(this, 8f)
+                    val lp: FlowLayout.LayoutParams  = FlowLayout.LayoutParams(dipToPx(4f), dipToPx(4f))
                     labelContainer.addView(it, lp)
                 }
     }

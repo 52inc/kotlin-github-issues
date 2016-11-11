@@ -8,7 +8,7 @@
     android:background="?android:colorBackground"
     android:elevation="@dimen/editor_layout_elevation"
     android:outlineProvider="background"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="beforeDescendants">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/toolbar_layout"
@@ -39,6 +39,8 @@
 
         android:iconifiedByDefault="false"
         android:queryHint="Filter"
+
+        style="@style/SearchViewTheme"
         />
 
     <View

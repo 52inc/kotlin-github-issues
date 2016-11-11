@@ -8,7 +8,7 @@
     android:background="?android:colorBackground"
     android:elevation="@dimen/editor_layout_elevation"
     android:outlineProvider="background"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="beforeDescendants">
 
     <RelativeLayout
         android:id="@+id/header"

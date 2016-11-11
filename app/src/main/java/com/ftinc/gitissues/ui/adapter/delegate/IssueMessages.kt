@@ -45,6 +45,8 @@ class CommentIssueMessage(val comment: Comment) : BaseIssueMessage {
 
 class EventIssueMessage(val events: List<Event>) : BaseIssueMessage {
 
+    constructor(event: Event) : this(listOf(event))
+
     fun getEvent(): Event = events[0]
 
     override fun getCreatedDate(): Long {
