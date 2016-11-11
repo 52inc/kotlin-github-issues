@@ -130,7 +130,7 @@ interface GithubAPI {
     @GET
     fun getEventsOnIssue(@Url url: String): Observable<List<Event>>
 
-    @GET("repos/{owner}/{repo}/issues/{number}/events")
+    @GET("repos/{owner}/{repo}/issues/{number}/events?per_page=100")
     fun getEventsOnIssue(@Path("owner") owner: String,
                          @Path("repo") repo: String,
                          @Path("number") issueNumber: Int) : Observable<List<Event>>

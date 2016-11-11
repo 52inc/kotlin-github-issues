@@ -65,7 +65,7 @@ class IssueMessengerPresenterImpl(var issue: Issue,
                 BiFunction<List<Comment>, List<Event>, List<BaseIssueMessage>> { t1, t2 ->
             val items: ArrayList<BaseIssueMessage> = ArrayList()
             items.addAll(t1.map(::CommentIssueMessage))
-            items.addAll(t2.map(::EventIssueMessage)) //transformEvents(t2))
+            items.addAll(transformEvents(t2))
             items
         })
         .flatMap { Observable.fromIterable(it) }
@@ -116,7 +116,9 @@ class IssueMessengerPresenterImpl(var issue: Issue,
     }
 
     fun getEventsObservable(): Observable<List<Event>>{
-        return api.getEventsOnIssue(issue.events_url)
+        val (owner, repo) = issue.getRepository()
+
+        return api.getEventsOnIssue(owner, repo, issue.number)
                 .map { it.filter {
                     val e: Events = Events.find(it.event)
                     e != Events.MENTIONED && e != Events.SUBSCRIBED
