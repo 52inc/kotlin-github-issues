@@ -14,6 +14,7 @@ import com.ftinc.gitissues.api.Label
 import com.ftinc.gitissues.ui.adapter.LabelAdapter
 import com.ftinc.gitissues.util.AnimUtils
 import com.ftinc.gitissues.util.gone
+import com.ftinc.kit.adapter.BetterRecyclerAdapter
 import com.ftinc.kit.widget.EmptyView
 
 /**
@@ -29,9 +30,8 @@ class LabelEditor : RelativeLayout,SearchView.OnQueryTextListener {
     val searchView: SearchView by bindView(R.id.search_view)
     val recyclerView: RecyclerView by bindView(R.id.recycler)
     val emptyView: EmptyView by bindView(R.id.empty_view)
-    val adapter: LabelAdapter
 
-    lateinit var labelSaveListener: OnLabelsSelectedListener
+    lateinit var labelSaveListener: OnItemSaveListener
 
     /***********************************************************************************************
      *
@@ -41,22 +41,16 @@ class LabelEditor : RelativeLayout,SearchView.OnQueryTextListener {
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
-        adapter = LabelAdapter(context)
-    }
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-
-        // Setup Recycler View
-        adapter.setEmptyView(emptyView)
-        recyclerView.adapter = adapter
 
         // Setup Search View
         searchView.setOnQueryTextListener(this)
         searchView.setOnQueryTextFocusChangeListener { view, b ->
             if(!b){
-                adapter.clearFilter()
+                if(recyclerView.adapter != null) (recyclerView.adapter as BetterRecyclerAdapter<*, *>).clearFilter()
             }
         }
 
@@ -69,8 +63,7 @@ class LabelEditor : RelativeLayout,SearchView.OnQueryTextListener {
             when(it.itemId){
                 R.id.action_save -> {
                     // Get the list of selected labels, and return them and hide this editor
-                    val labels = adapter.selectedLabels
-                    labelSaveListener?.onLabelsSaved(labels)
+                    labelSaveListener?.onItemsSaved()
                     hide()
                     true
                 }
@@ -86,15 +79,23 @@ class LabelEditor : RelativeLayout,SearchView.OnQueryTextListener {
      *
      */
 
-    fun setOnLabelsSelectedListener(listener: OnLabelsSelectedListener){
+    fun setOnItemSaveListener(listener: OnItemSaveListener){
         labelSaveListener = listener
     }
 
-    fun setLabels(labels: List<Label>, selected: Map<Label, Boolean>){
-        adapter.clear()
-        adapter.addAll(labels)
-        adapter.checkedState.putAll(selected)
+    fun <T, VH: RecyclerView.ViewHolder> setAdapter(adapter: BetterRecyclerAdapter<T, VH>){
+        adapter.setEmptyView(emptyView)
         adapter.notifyDataSetChanged()
+        recyclerView.adapter = adapter
+    }
+
+    fun setTitle(title: String){
+        toolbar.title = title
+    }
+
+    fun setEmptyView(message: Int, icon: Int){
+        emptyView.setEmptyMessage(message)
+        emptyView.setIcon(icon)
     }
 
     fun hide(){
@@ -116,12 +117,12 @@ class LabelEditor : RelativeLayout,SearchView.OnQueryTextListener {
      */
 
     override fun onQueryTextSubmit(query: String?): Boolean {
-        adapter.filter(query)
+        if(recyclerView.adapter != null) (recyclerView.adapter as BetterRecyclerAdapter<*, *>).filter(query)
         return true
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        adapter.filter(newText)
+        if(recyclerView.adapter != null) (recyclerView.adapter as BetterRecyclerAdapter<*, *>).filter(newText)
         return true
     }
 
@@ -131,8 +132,8 @@ class LabelEditor : RelativeLayout,SearchView.OnQueryTextListener {
      *
      */
 
-    interface OnLabelsSelectedListener{
-        fun onLabelsSaved(labels: List<Label>)
+    interface OnItemSaveListener{
+        fun onItemsSaved()
     }
 
 }

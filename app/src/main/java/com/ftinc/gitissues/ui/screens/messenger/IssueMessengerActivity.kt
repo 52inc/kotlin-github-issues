@@ -34,9 +34,12 @@ import com.ftinc.gitissues.R
 import com.ftinc.gitissues.api.Issue
 import com.ftinc.gitissues.api.IssueParcel
 import com.ftinc.gitissues.api.Label
+import com.ftinc.gitissues.api.Milestone
 import com.ftinc.gitissues.di.components.AppComponent
 import com.ftinc.gitissues.ui.BaseActivity
+import com.ftinc.gitissues.ui.adapter.LabelAdapter
 import com.ftinc.gitissues.ui.adapter.MessengerAdapter
+import com.ftinc.gitissues.ui.adapter.MilestoneAdapter
 import com.ftinc.gitissues.ui.adapter.delegate.BaseIssueMessage
 import com.ftinc.gitissues.ui.adapter.delegate.CommentIssueMessage
 import com.ftinc.gitissues.ui.widget.FlowLayout
@@ -97,7 +100,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
     val refreshLayout: SwipeRefreshLayout by bindView(R.id.refresh_layout)
     val recycler: RecyclerView by bindView(R.id.recycler)
     val editor: MarkdownEditor by bindView(R.id.editor)
-    val labelEditor: LabelEditor by bindView(R.id.label_editor)
+    val itemEditor: LabelEditor by bindView(R.id.item_editor)
 
     val fab: FloatingActionButton by bindView(R.id.fab)
     val scrim: View by bindView(R.id.results_scrim)
@@ -109,6 +112,8 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
 
     private lateinit var adapter: MessengerAdapter
     private lateinit var issue: Issue
+    private lateinit var labelAdapter: LabelAdapter
+    private lateinit var milestoneAdapter: MilestoneAdapter
     private val transitions = SparseArray<Transition>()
 
     @Inject
@@ -169,6 +174,9 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
         recycler.layoutManager = LinearLayoutManager(this)
         (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
 
+        labelAdapter = LabelAdapter(this)
+        milestoneAdapter = MilestoneAdapter(this)
+
         refreshLayout.setOnRefreshListener {
             presenter.loadIssueContent()
         }
@@ -199,12 +207,6 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
             it.setOnClickListener(this)
         }
 
-        labelEditor.setOnLabelsSelectedListener(object : LabelEditor.OnLabelsSelectedListener{
-            override fun onLabelsSaved(labels: List<Label>) {
-                presenter.updateLabels(labels)
-            }
-        })
-
     }
 
     override fun onResume() {
@@ -217,9 +219,9 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
         if(editor.visibility == View.VISIBLE) {
             fab.visible()
             editor.hide()
-        }else if(labelEditor.visibility == View.VISIBLE){
+        }else if(itemEditor.visibility == View.VISIBLE){
             fab.visible()
-            labelEditor.hide()
+            itemEditor.hide()
         }else if(issueActionContainer.visibility == View.VISIBLE) {
             TransitionManager.beginDelayedTransition(rootLayout, getTransition(R.transition.search_hide_confirm))
             issueActionContainer.gone()
@@ -236,6 +238,15 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.action_labels -> {
+                itemEditor.setTitle(getString(R.string.action_labels))
+                itemEditor.setEmptyView(R.string.empty_message_generic, R.drawable.ic_empty_github)
+                itemEditor.setAdapter(labelAdapter)
+                itemEditor.setOnItemSaveListener(object : LabelEditor.OnItemSaveListener{
+                    override fun onItemsSaved() {
+                        presenter.updateLabels(labelAdapter.selectedLabels)
+                    }
+                })
+
                 val transition = getTransition(R.transition.issue_label_editor_show)
                 transition?.addListener(object : TransitionUtils.TransitionListenerAdapter() {
                     override fun onTransitionEnd(transition: Transition?) {
@@ -254,10 +265,40 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
                     }
                 })
                 TransitionManager.beginDelayedTransition(rootLayout, transition)
-                labelEditor.visible()
+                itemEditor.visible()
                 inputScrim.visible()
             }
-            R.id.action_milestones -> null
+            R.id.action_milestones -> {
+                itemEditor.setTitle(getString(R.string.action_milestones))
+                itemEditor.setEmptyView(R.string.empty_message_generic, R.drawable.ic_empty_github)
+                itemEditor.setAdapter(milestoneAdapter)
+                itemEditor.setOnItemSaveListener(object : LabelEditor.OnItemSaveListener{
+                    override fun onItemsSaved() {
+                        presenter.updateMilestone(milestoneAdapter.currentMilestone)
+                    }
+                })
+
+                val transition = getTransition(R.transition.issue_label_editor_show)
+                transition?.addListener(object : TransitionUtils.TransitionListenerAdapter() {
+                    override fun onTransitionEnd(transition: Transition?) {
+                        issueActionContainer.gone()
+                        scrim.gone()
+                        fab.visible()
+                        inputScrim.animate()
+                                .alpha(0f)
+                                .setInterpolator(AnimUtils.getFastOutLinearInInterpolator(this@IssueMessengerActivity))
+                                .setDuration(300)
+                                .withEndAction {
+                                    inputScrim.gone()
+                                    inputScrim.alpha = 1f
+                                }
+                                .start()
+                    }
+                })
+                TransitionManager.beginDelayedTransition(rootLayout, transition)
+                itemEditor.visible()
+                inputScrim.visible()
+            }
             R.id.action_assignees -> null
             R.id.action_new_comment -> {
                 val transition = getTransition(R.transition.issue_editor_show)
@@ -358,7 +399,17 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
     }
 
     override fun setEditableLabels(labels: List<Label>?, selectedMap: MutableMap<Label, Boolean>) {
-        labelEditor.setLabels(labels ?: listOf(), selectedMap)
+        labelAdapter.clear()
+        labelAdapter.addAll(labels ?: listOf())
+        labelAdapter.checkedState.putAll(selectedMap)
+        labelAdapter.notifyDataSetChanged()
+    }
+
+    override fun setEditableMilestones(milestones: List<Milestone>?, currentMilestone: Milestone?) {
+        milestoneAdapter.clear()
+        milestoneAdapter.addAll(milestones)
+        milestoneAdapter.currentMilestone = currentMilestone
+        milestoneAdapter.notifyDataSetChanged()
     }
 
     override fun setMessengerItems(items: List<BaseIssueMessage>) {

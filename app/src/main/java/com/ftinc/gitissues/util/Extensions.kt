@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
 import android.support.annotation.DrawableRes
+import android.support.annotation.StringRes
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.View
@@ -35,7 +36,7 @@ fun Context.dipToPx(dp: Float) : Int = Utils.dipToPx(this, dp)
 fun RecyclerView.ViewHolder.dpToPx(dp: Float) : Float = Utils.dpToPx(this.itemView.context, dp)
 fun RecyclerView.ViewHolder.dipToPx(dp: Float) : Int = Utils.dipToPx(this.itemView.context, dp)
 @ColorInt fun RecyclerView.ViewHolder.color(@ColorRes resId: Int) : Int = ContextCompat.getColor(this.itemView.context, resId)
-
+fun RecyclerView.ViewHolder.string(@StringRes resId: Int, vararg formatArgs: Any): String = this.itemView.context.getString(resId, formatArgs)
 
 
 fun View.setVisible(visible: Boolean) {
@@ -46,6 +47,7 @@ fun View.setVisibleWeak(visible: Boolean) {
 }
 
 fun Date.timeAgo(): String? = TimeUtils.getTimeAgo(this.time)
+fun Date.longFormat(): String = SimpleDateFormat("MMMM d, yyyy", Locale.US).format(this)
 fun String.colorFromHex(): Int {
     val hex: String = if(this.startsWith("#")) this else "#$this"
     return Color.parseColor(hex)

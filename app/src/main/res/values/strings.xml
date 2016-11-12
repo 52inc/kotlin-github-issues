@@ -19,5 +19,11 @@
     <string name="action_save">Save</string>
     <string name="empty_labels">Looks like there aren\'t any labels to add</string>
     <string name="action_create_label">Create label</string>
+    <string name="label_milestone_updated">Last updated %1$s</string>
+    <string name="label_milestone_dueon">Due by %1$s</string>
+    <string name="label_milestone_no_dueon">No due date</string>
+    <string name="complete">complete</string>
+    <string name="open">open</string>
+    <string name="closed">closed</string>
 
 </resources>

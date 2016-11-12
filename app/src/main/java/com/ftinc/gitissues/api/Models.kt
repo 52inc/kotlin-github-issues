@@ -1,7 +1,6 @@
 package com.ftinc.gitissues.api
 
 import android.net.Uri
-import com.ftinc.gitissues.ui.adapter.delegate.EventSpan
 import com.ftinc.gitissues.util.timeAgo
 import com.squareup.moshi.Json
 import nz.bradcampbell.paperparcel.PaperParcel

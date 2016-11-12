@@ -49,6 +49,21 @@ class IssueMessengerPresenterImpl(var issue: Issue,
                 })
     }
 
+    override fun updateMilestone(milestone: Milestone?) {
+        if(milestone != null && milestone != issue.milestone) {
+            val (owner, repo) = issue.getRepository()
+            val updateIssue = IssueEdit(issue.title, issue.body, issue.state, milestone.number, issue.labels.map { it.name }, if(issue.assignee != null) listOf(issue.assignee?.login!!) else null)
+            api.editIssue(owner, repo, issue.number, updateIssue)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        issue = it
+                        updateViewWithIssue()
+                    },{
+                        view.showSnackBar(it)
+                    })
+        }
+    }
+
     override fun loadIssueContent() {
 
         // determine status color
@@ -94,6 +109,15 @@ class IssueMessengerPresenterImpl(var issue: Issue,
                     })
 
                     view.setEditableLabels(labels, selectedMap)
+                }, { error ->
+                    view.showSnackBar(error)
+                })
+
+        // Load repo milestones
+        api.getMilestones(repo.owner, repo.repo)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ milestones ->
+                    view.setEditableMilestones(milestones, issue.milestone)
                 }, { error ->
                     view.showSnackBar(error)
                 })

@@ -17,7 +17,7 @@
     <fade android:duration="5"
         android:fadingMode="fade_in">
         <targets>
-            <target android:targetId="@id/label_editor" />
+            <target android:targetId="@id/item_editor" />
         </targets>
     </fade>
 

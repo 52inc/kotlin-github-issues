@@ -16,7 +16,9 @@ import com.ftinc.gitissues.R
 import com.ftinc.gitissues.api.Event
 import com.ftinc.gitissues.api.Events
 import com.ftinc.gitissues.api.githubTimeAgo
+import com.ftinc.gitissues.ui.span.EventSpanned
 import com.ftinc.gitissues.ui.span.LabelSpan
+import com.ftinc.gitissues.ui.span.fancyText
 import com.ftinc.gitissues.util.*
 import com.hannesdorfmann.adapterdelegates2.AdapterDelegate
 
@@ -194,41 +196,4 @@ class EventViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
 
     }
 
-}
-
-class EventSpan(val text: String,
-                val span: Any?)
-
-class EventSpanned{
-
-    val items = arrayListOf<EventSpan>()
-
-    fun span(text: String, span: Any?) = items.add(EventSpan(text, span))
-    fun span(text: String) = items.add(EventSpan(text, null))
-
-    fun build(): SpannableString {
-        val string: String = items.fold("", {
-            spanText, span ->
-            "$spanText${span.text} "
-        })
-
-        val s: SpannableString = SpannableString(string)
-        var len: Int = 0
-
-        items.forEach {
-            if(it.span != null){
-                s.setSpan(it.span, len, len+it.text.length, SpannableString.SPAN_INCLUSIVE_EXCLUSIVE);
-            }
-            len += it.text.length+1
-        }
-
-        return s
-    }
-
-}
-
-fun fancyText(init: EventSpanned.() -> Unit): EventSpanned {
-    val text = EventSpanned()
-    text.init()
-    return text
 }

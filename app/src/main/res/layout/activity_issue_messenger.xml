@@ -276,8 +276,8 @@
         />
 
     <include
-        layout="@layout/layout_label_editor"
-        android:id="@+id/label_editor"
+        layout="@layout/layout_item_editor"
+        android:id="@+id/item_editor"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="bottom"
