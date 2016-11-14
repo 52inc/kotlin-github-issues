@@ -31,12 +31,10 @@ import butterknife.bindViews
 import com.bumptech.glide.Glide
 import com.ftinc.gitissues.App
 import com.ftinc.gitissues.R
-import com.ftinc.gitissues.api.Issue
-import com.ftinc.gitissues.api.IssueParcel
-import com.ftinc.gitissues.api.Label
-import com.ftinc.gitissues.api.Milestone
+import com.ftinc.gitissues.api.*
 import com.ftinc.gitissues.di.components.AppComponent
 import com.ftinc.gitissues.ui.BaseActivity
+import com.ftinc.gitissues.ui.adapter.AssigneeAdapter
 import com.ftinc.gitissues.ui.adapter.LabelAdapter
 import com.ftinc.gitissues.ui.adapter.MessengerAdapter
 import com.ftinc.gitissues.ui.adapter.MilestoneAdapter
@@ -114,6 +112,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
     private lateinit var issue: Issue
     private lateinit var labelAdapter: LabelAdapter
     private lateinit var milestoneAdapter: MilestoneAdapter
+    private lateinit var assigneeAdapter: AssigneeAdapter
     private val transitions = SparseArray<Transition>()
 
     @Inject
@@ -176,6 +175,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
 
         labelAdapter = LabelAdapter(this)
         milestoneAdapter = MilestoneAdapter(this)
+        assigneeAdapter = AssigneeAdapter(this)
 
         refreshLayout.setOnRefreshListener {
             presenter.loadIssueContent()
@@ -299,7 +299,37 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
                 itemEditor.visible()
                 inputScrim.visible()
             }
-            R.id.action_assignees -> null
+            R.id.action_assignees -> {
+                itemEditor.setTitle(getString(R.string.action_assignees))
+                itemEditor.setEmptyView(R.string.empty_message_generic, R.drawable.ic_empty_github)
+                itemEditor.setAdapter(assigneeAdapter)
+                itemEditor.setOnItemSaveListener(object : LabelEditor.OnItemSaveListener{
+                    override fun onItemsSaved() {
+                        presenter.updateAssignees(assigneeAdapter.selectedUsers)
+                    }
+                })
+
+                val transition = getTransition(R.transition.issue_label_editor_show)
+                transition?.addListener(object : TransitionUtils.TransitionListenerAdapter() {
+                    override fun onTransitionEnd(transition: Transition?) {
+                        issueActionContainer.gone()
+                        scrim.gone()
+                        fab.visible()
+                        inputScrim.animate()
+                                .alpha(0f)
+                                .setInterpolator(AnimUtils.getFastOutLinearInInterpolator(this@IssueMessengerActivity))
+                                .setDuration(300)
+                                .withEndAction {
+                                    inputScrim.gone()
+                                    inputScrim.alpha = 1f
+                                }
+                                .start()
+                    }
+                })
+                TransitionManager.beginDelayedTransition(rootLayout, transition)
+                itemEditor.visible()
+                inputScrim.visible()
+            }
             R.id.action_new_comment -> {
                 val transition = getTransition(R.transition.issue_editor_show)
                 transition?.addListener(object : TransitionUtils.TransitionListenerAdapter() {
@@ -410,6 +440,13 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
         milestoneAdapter.addAll(milestones)
         milestoneAdapter.currentMilestone = currentMilestone
         milestoneAdapter.notifyDataSetChanged()
+    }
+
+    override fun setEditableAssignees(assignees: List<User>?, selectedMap: MutableMap<User, Boolean>) {
+        assigneeAdapter.clear()
+        assigneeAdapter.addAll(assignees)
+        assigneeAdapter.checkedState.putAll(selectedMap)
+        assigneeAdapter.notifyDataSetChanged()
     }
 
     override fun setMessengerItems(items: List<BaseIssueMessage>) {

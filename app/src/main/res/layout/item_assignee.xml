@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.internal.ForegroundLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:gravity="start|center_vertical"
+    android:foreground="?attr/selectableItemBackground">
+
+    <com.ftinc.kit.widget.BezelImageView
+        android:id="@+id/avatar"
+        android:layout_width="@dimen/avatar_dimen"
+        android:layout_height="@dimen/avatar_dimen"
+
+        android:layout_margin="16dp"
+
+        tools:src="@color/grey_400"
+        app:maskDrawable="@drawable/dr_mask_round_rect"
+        />
+
+    <TextView
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        tools:text="r0adkll"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="16sp"
+        />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/tiny_padding"
+
+        tools:text="Drew Heavner"
+        />
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        />
+
+    <ImageView
+        android:id="@+id/checked"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="@dimen/normal_padding"
+
+        android:src="@drawable/ic_check_circle_green_500_18dp"
+        android:visibility="gone"
+        />
+
+
+</android.support.design.internal.ForegroundLinearLayout>

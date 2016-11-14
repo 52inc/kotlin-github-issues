@@ -64,6 +64,21 @@ class IssueMessengerPresenterImpl(var issue: Issue,
         }
     }
 
+    override fun updateAssignees(currentUser: List<User>?) {
+        if(currentUser != null){
+            val (owner, repo) = issue.getRepository()
+            val updateIssue = IssueEdit(issue.title, issue.body, issue.state, issue.milestone?.number, issue.labels.map { it.name }, currentUser.map(User::login))
+            api.editIssue(owner, repo, issue.number, updateIssue)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        issue = it
+                        updateViewWithIssue()
+                    }, {
+                        view.showSnackBar(it)
+                    })
+        }
+    }
+
     override fun loadIssueContent() {
 
         // determine status color
@@ -120,6 +135,20 @@ class IssueMessengerPresenterImpl(var issue: Issue,
                     view.setEditableMilestones(milestones, issue.milestone)
                 }, { error ->
                     view.showSnackBar(error)
+                })
+
+        api.getAssignees(repo.owner, repo.repo)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    val selectedMap = issue.assignees?.fold(mutableMapOf<User, Boolean>(), {
+                        map, user ->
+                        map[user] = true
+                        map
+                    })
+
+                    view.setEditableAssignees(it, selectedMap ?: mutableMapOf())
+                }, {
+                    view.showSnackBar(it)
                 })
 
     }
