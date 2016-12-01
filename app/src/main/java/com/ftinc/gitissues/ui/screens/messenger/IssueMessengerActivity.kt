@@ -81,9 +81,9 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
     val collapsingAppBar: CollapsingToolbarLayout by bindView(R.id.collapsing_toolbar)
     val appbar: Toolbar by bindView(R.id.appbar)
 
-    val collapsedTitleInfo: RelativeLayout by bindView(R.id.collapsed_title_info)
-    val collapsedIssueTitle: TextView by bindView(R.id.collapsed_issue_title)
-    val collapsedNumber: TextView by bindView(R.id.collapsed_number)
+//    val collapsedTitleInfo: RelativeLayout by bindView(R.id.collapsed_title_info)
+//    val collapsedIssueTitle: TextView by bindView(R.id.collapsed_issue_title)
+//    val collapsedNumber: TextView by bindView(R.id.collapsed_number)
 
     val status: LabelView by bindView(R.id.status)
     val number: TextView by bindView(R.id.number)
@@ -164,7 +164,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
             titleInfo.alpha = alpha
 
             // Modulate Collapsed title visibility
-            collapsedTitleInfo.alpha = p2
+//            collapsedTitleInfo.alpha = p2
 
         }
 
@@ -395,12 +395,12 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
 
     override fun setNumber(number: String) {
         this.number.text = number
-        this.collapsedNumber.text = number
+//        this.collapsedNumber.text = number
     }
 
     override fun setIssueTitle(title: String) {
         issueTitle.text = title
-        collapsedIssueTitle.text = title
+//        collapsedIssueTitle.text = title
     }
 
     override fun setOwnerAvatar(url: String) {

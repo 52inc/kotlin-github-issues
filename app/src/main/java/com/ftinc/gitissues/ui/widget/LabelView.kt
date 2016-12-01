@@ -34,6 +34,8 @@ class LabelView : TextView{
             background?.setColorFilter(value, PorterDuff.Mode.SRC_ATOP)
         }
 
+    var labelTextColor: Int = -1
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr){
@@ -58,6 +60,7 @@ class LabelView : TextView{
     private fun parseAttributes(attrs: AttributeSet?, defStyleAttr: Int){
         val a: TypedArray? = context.obtainStyledAttributes(attrs, R.styleable.LabelView, defStyleAttr, 0)
         labelColor = a?.getColor(R.styleable.LabelView_lv_color, -1) ?: color(R.color.grey_500)
+        labelTextColor = a?.getColor(R.styleable.LabelView_lv_textColor, -1) ?: -1
         a?.recycle()
     }
 
@@ -82,6 +85,18 @@ class LabelView : TextView{
 
         val levelListBg: LayerDrawable = LayerDrawable(arrayOf(bg, bgOutline))
         background = levelListBg
+
+        // Update text color if overriden
+        if(labelTextColor != -1) {
+            setTextColor(labelTextColor)
+        }else{
+            if(ColorUtils.calculateContrast(Color.WHITE, labelColor) < 3.0){
+                val color = color(R.color.black87)
+                setTextColor(color)
+            }else{
+                setTextColor(Color.WHITE)
+            }
+        }
     }
 
     fun normalize(value: Int, default: Int): Int = if(default > value) default else value

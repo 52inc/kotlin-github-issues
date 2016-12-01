@@ -3,6 +3,7 @@
 
     <declare-styleable name="LabelView">
         <attr name="lv_color" format="color|reference" />
+        <attr name="lv_textColor" format="color|reference" />
     </declare-styleable>
 
 </resources>

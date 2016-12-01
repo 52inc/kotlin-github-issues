@@ -20,7 +20,7 @@ class IssueTest {
 
         val issue: Issue = Issue(0L, "https://api.github.com/repos/octocat/Hello-World",
                 "", "", 0, "", "", "", "", "", User(0, "", "", "", "", "", "", "", "", 0, 0, 0, 0), listOf(),
-                null, null, false, 0, null, "", null, null, null)
+                null, null, null, false, 0, null, "", null, null, null)
 
         val repo: Repo = issue.getRepository()
 
