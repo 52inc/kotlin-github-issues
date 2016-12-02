@@ -16,14 +16,8 @@ import com.ftinc.gitissues.ui.adapter.delegate.CommentIssueMessage
 interface IssueMessengerView: BaseView{
 
     fun setStatus(status: String, @ColorRes color: Int)
-    fun setNumber(number: String)
-    fun setIssueTitle(title: String)
-    fun setOwnerAvatar(url: String)
-    fun setOwnerName(name: String)
-    fun setOpenDate(date: String)
-
-    fun setLabels(labels: List<Label>)
     fun setMessengerItems(items: List<BaseIssueMessage>)
+    fun updateIssueMessengerItem(item: BaseIssueMessage)
 
     fun hideLoading()
     fun appendComment(comment: CommentIssueMessage?)

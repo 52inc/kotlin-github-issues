@@ -1,20 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:background="@color/white"
-              android:elevation="4dp"
-              android:layout_marginBottom="@dimen/small_padding">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:elevation="4dp"
+    android:paddingTop="?attr/actionBarSize"
+    android:layout_marginBottom="@dimen/small_padding">
 
-    <TextView android:id="@+id/text"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="@dimen/normal_padding"
+    <RelativeLayout
+        android:id="@+id/title_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/normal_padding"
+        android:layout_marginStart="@dimen/normal_padding"
+        android:layout_marginEnd="@dimen/normal_padding"
+        >
 
-              tools:text="@string/placeholder_lorem_ipsum_long"
-              android:textSize="16sp"
-              android:textColor="?android:attr/textColorPrimary" />
+        <TextView
+            android:id="@+id/number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_centerVertical="true"
+
+            tools:text="#16"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            />
+
+        <TextView
+            android:id="@+id/issue_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_toEndOf="@+id/number"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/small_padding"
+
+            tools:text="Cluster of related signup problems"
+            android:textSize="20sp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:fontFamily="sans-serif-medium"
+            />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/normal_padding"
+        android:layout_marginStart="@dimen/normal_padding"
+        android:layout_marginEnd="@dimen/normal_padding"
+
+        android:orientation="horizontal">
+
+        <com.ftinc.kit.widget.BezelImageView
+            android:id="@+id/owner_avatar"
+            android:layout_width="@dimen/avatar_small_dimen"
+            android:layout_height="@dimen/avatar_small_dimen"
+
+            tools:src="@color/white"
+            app:maskDrawable="@drawable/dr_mask_round_rect"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/small_padding">
+
+            <TextView
+                android:id="@+id/owner_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                tools:text="r0adkll"
+                android:textColor="?android:attr/textColorPrimary"
+                android:fontFamily="sans-serif-medium"
+                />
+
+            <TextView
+                android:id="@+id/opened_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_toEndOf="@+id/owner_name"
+                android:layout_marginStart="@dimen/tiny_padding"
+
+                android:text="@string/opened_this_issue"
+                android:textColor="?android:attr/textColorTertiary"
+                />
+
+            <TextView
+                android:id="@+id/open_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/owner_name"
+
+                tools:text="3 days ago"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/normal_padding"
+        android:layout_marginStart="@dimen/normal_padding"
+        android:layout_marginEnd="@dimen/normal_padding"
+        >
+
+        <com.ftinc.gitissues.ui.widget.FlowLayout
+            android:id="@+id/label_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@+id/tag_icon"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal"
+            >
+
+        </com.ftinc.gitissues.ui.widget.FlowLayout>
+
+        <ImageView android:id="@+id/tag_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_tag"
+            android:tint="@color/grey_600"
+            android:padding="8dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/normal_padding"
+        android:layout_marginTop="@dimen/small_padding"
+
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="16sp"
+        tools:text="@string/placeholder_lorem_ipsum_long" />
 
 </LinearLayout>

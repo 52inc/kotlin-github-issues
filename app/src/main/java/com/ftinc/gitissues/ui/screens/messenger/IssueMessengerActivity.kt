@@ -2,33 +2,25 @@ package com.ftinc.gitissues.ui.screens.messenger
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Rect
+import android.graphics.Color
 import android.graphics.drawable.AnimatedVectorDrawable
 import android.os.Bundle
-import android.support.annotation.ColorInt
 import android.support.annotation.ColorRes
 import android.support.annotation.TransitionRes
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.CollapsingToolbarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.SwipeRefreshLayout
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SimpleItemAnimator
-import android.support.v7.widget.Toolbar
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
+import android.support.v7.widget.*
 import android.transition.Transition
 import android.transition.TransitionInflater
 import android.transition.TransitionManager
 import android.util.SparseArray
+import android.view.Gravity
 import android.view.View
-import android.widget.*
+import android.widget.FrameLayout
+import android.widget.TextView
 import butterknife.bindView
 import butterknife.bindViews
-import com.bumptech.glide.Glide
 import com.ftinc.gitissues.App
 import com.ftinc.gitissues.R
 import com.ftinc.gitissues.api.*
@@ -40,18 +32,15 @@ import com.ftinc.gitissues.ui.adapter.MessengerAdapter
 import com.ftinc.gitissues.ui.adapter.MilestoneAdapter
 import com.ftinc.gitissues.ui.adapter.delegate.BaseIssueMessage
 import com.ftinc.gitissues.ui.adapter.delegate.CommentIssueMessage
-import com.ftinc.gitissues.ui.widget.FlowLayout
 import com.ftinc.gitissues.ui.widget.LabelEditor
 import com.ftinc.gitissues.ui.widget.LabelView
 import com.ftinc.gitissues.ui.widget.MarkdownEditor
 import com.ftinc.gitissues.util.*
 import com.ftinc.kit.util.UIUtils
 import com.ftinc.kit.util.Utils
-import com.ftinc.kit.widget.BezelImageView
 import com.r0adkll.slidr.Slidr
 import com.r0adkll.slidr.model.SlidrConfig
 import com.r0adkll.slidr.model.SlidrPosition
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -77,23 +66,9 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
      */
 
     val rootLayout: CoordinatorLayout by bindView(R.id.root_layout)
-    val appBarLayout: AppBarLayout by bindView(R.id.appbar_layout)
-    val collapsingAppBar: CollapsingToolbarLayout by bindView(R.id.collapsing_toolbar)
     val appbar: Toolbar by bindView(R.id.appbar)
 
-//    val collapsedTitleInfo: RelativeLayout by bindView(R.id.collapsed_title_info)
-//    val collapsedIssueTitle: TextView by bindView(R.id.collapsed_issue_title)
-//    val collapsedNumber: TextView by bindView(R.id.collapsed_number)
-
     val status: LabelView by bindView(R.id.status)
-    val number: TextView by bindView(R.id.number)
-    val titleInfo: RelativeLayout by bindView(R.id.title_info)
-    val issueTitle: TextView by bindView(R.id.issue_title)
-    val ownerAvatar: BezelImageView by bindView(R.id.owner_avatar)
-    val ownerName: TextView by bindView(R.id.owner_name)
-    val openDate: TextView by bindView(R.id.open_date)
-    val openedLabel: TextView by bindView(R.id.opened_label)
-    val labelContainer: FlowLayout by bindView(R.id.label_container)
 
     val refreshLayout: SwipeRefreshLayout by bindView(R.id.refresh_layout)
     val recycler: RecyclerView by bindView(R.id.recycler)
@@ -139,39 +114,23 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
         appbar.navigationIcon = backArrow
         backArrow.start()
 
-        collapsingAppBar.isTitleEnabled = false
-
         appbar.setNavigationOnClickListener {
             supportFinishAfterTransition()
-        }
-
-        appBarLayout.addOnOffsetChangedListener { appBarLayout, i ->
-            val total: Float = (appBarLayout.height - appbar.height).toFloat()
-            val percent: Float = Math.abs(i).toFloat() / total
-            val accelPercent: Float = Utils.clamp(Math.abs(i * 2).toFloat(), 0f, total) / total
-
-            val i2: Float = Math.abs(i * 2).toFloat()
-            val p2: Float = Utils.clamp(i2 - total, 0f, total) / total
-
-            // modulate alpha visibility of header views
-            val alpha: Float = 1f - accelPercent
-            status.alpha = alpha
-            ownerAvatar.alpha = alpha
-            ownerName.alpha = alpha
-            openDate.alpha = alpha
-            labelContainer.alpha = alpha
-            openedLabel.alpha = alpha
-            titleInfo.alpha = alpha
-
-            // Modulate Collapsed title visibility
-//            collapsedTitleInfo.alpha = p2
-
         }
 
         adapter = MessengerAdapter(this)
         recycler.adapter = adapter
         recycler.layoutManager = LinearLayoutManager(this)
         (recycler.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
+
+        recycler.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
+                val actionBarSize = UIUtils.getActionBarSize(this@IssueMessengerActivity).toFloat() / 2f
+                val percent = Utils.clamp(Math.abs(recyclerView?.computeVerticalScrollOffset()?.toFloat() ?: 0f), 0f, actionBarSize) / actionBarSize
+                val color = android.support.v4.graphics.ColorUtils.setAlphaComponent(Color.WHITE, (percent * 255).toInt())
+                appbar.setBackgroundColor(color)
+            }
+        })
 
         labelAdapter = LabelAdapter(this)
         milestoneAdapter = MilestoneAdapter(this)
@@ -205,6 +164,20 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
 
         actions.forEach {
             it.setOnClickListener(this)
+        }
+
+        status.setOnClickListener {
+            val menu = PopupMenu(this, it, Gravity.END or Gravity.TOP)
+            menu.inflate(R.menu.status_menu)
+            val toggle = menu.menu.findItem(R.id.action_toggle)
+            toggle.setTitle(if(status.text.toString().equals("open", true)) R.string.close_issue else R.string.open_issue)
+            menu.setOnMenuItemClickListener {
+                if(it.itemId == R.id.action_toggle){
+                    presenter.toggleStatus()
+                }
+                true
+            }
+            menu.show()
         }
 
     }
@@ -393,41 +366,6 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
         this.status.labelColor = color(color)
     }
 
-    override fun setNumber(number: String) {
-        this.number.text = number
-//        this.collapsedNumber.text = number
-    }
-
-    override fun setIssueTitle(title: String) {
-        issueTitle.text = title
-//        collapsedIssueTitle.text = title
-    }
-
-    override fun setOwnerAvatar(url: String) {
-        Glide.with(this)
-                .load(url)
-                .placeholder(R.drawable.dr_avatar_default)
-                .crossFade()
-                .into(ownerAvatar)
-    }
-
-    override fun setOwnerName(name: String) {
-        ownerName.text = name
-    }
-
-    override fun setOpenDate(date: String) {
-        openDate.text = date
-    }
-
-    override fun setLabels(labels: List<Label>) {
-        labelContainer.removeAllViews()
-        labels.map { LabelView(this, it) }
-                .forEach {
-                    val lp: FlowLayout.LayoutParams  = FlowLayout.LayoutParams(dipToPx(4f), dipToPx(4f))
-                    labelContainer.addView(it, lp)
-                }
-    }
-
     override fun setEditableLabels(labels: List<Label>?, selectedMap: MutableMap<Label, Boolean>) {
         labelAdapter.clear()
         labelAdapter.addAll(labels ?: listOf())
@@ -453,12 +391,16 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
         RecyclerViewUtils.applyDynamicChanges(adapter, items)
     }
 
+    override fun updateIssueMessengerItem(item: BaseIssueMessage) {
+        if(adapter.itemCount > 0)
+            adapter[0] = item
+        else
+            adapter.add(item)
+    }
+
     override fun appendComment(comment: CommentIssueMessage?) {
         adapter.add(comment as BaseIssueMessage)
         recycler.scrollToPosition(adapter.itemCount-1)
     }
-
-
-
 
 }

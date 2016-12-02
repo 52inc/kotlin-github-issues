@@ -14,4 +14,5 @@ interface IssueMessengerPresenter{
     fun updateLabels(labels: List<Label>)
     fun updateMilestone(milestone: Milestone?)
     fun updateAssignees(currentUser: List<User>?)
+    fun toggleStatus()
 }

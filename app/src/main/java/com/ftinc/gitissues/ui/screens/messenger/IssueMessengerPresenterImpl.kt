@@ -18,6 +18,20 @@ class IssueMessengerPresenterImpl(var issue: Issue,
                                   val api: GithubAPI,
                                   val view: IssueMessengerView): IssueMessengerPresenter{
 
+    override fun toggleStatus() {
+        val newState = if(issue.state.equals("open", true)) "closed" else "open"
+        val issueEdit = IssueEdit(issue.title, issue.body, newState, issue.milestone?.number, issue.labels.map { it.name }, if(issue.assignee != null) listOf(issue.assignee?.login!!) else null)
+        val (owner, repo) = issue.getRepository()
+        api.editIssue(owner, repo, issue.number, issueEdit)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    issue = it
+                    updateViewWithIssue()
+                }, {
+                    view.showSnackBar(it)
+                })
+    }
+
     override fun createComment(markdown: String) {
 
         // Construct body object
@@ -155,13 +169,8 @@ class IssueMessengerPresenterImpl(var issue: Issue,
 
     fun updateViewWithIssue(){
         val statusColor: Int = if(issue.state.equals("open", true)) R.color.green_500 else R.color.red_500
-        view.setIssueTitle(issue.title)
-        view.setNumber("#${issue.number}")
-        view.setOwnerName(issue.user.login)
-        view.setOwnerAvatar(issue.user.avatar_url)
         view.setStatus(issue.state, statusColor)
-        view.setOpenDate(issue.updated_at?.githubTimeAgo().toString())
-        view.setLabels(issue.labels)
+        view.updateIssueMessengerItem(IssueMessage(issue))
     }
 
     fun getCommentsObservable(): Observable<List<Comment>>{

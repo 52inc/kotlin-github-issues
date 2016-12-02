@@ -15,8 +15,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.ftinc.gitissues.R
 import com.ftinc.gitissues.api.Issue
+import com.ftinc.gitissues.api.githubTimeAgo
+import com.ftinc.gitissues.ui.widget.FlowLayout
+import com.ftinc.gitissues.ui.widget.LabelView
 import com.ftinc.gitissues.util.ImageSpanTarget
 import com.ftinc.gitissues.util.assetString
+import com.ftinc.gitissues.util.dipToPx
+import com.ftinc.kit.widget.BezelImageView
 import com.hannesdorfmann.adapterdelegates2.AdapterDelegate
 import timber.log.Timber
 
@@ -44,6 +49,13 @@ class IssueMessageDelegate(val activity: Activity, val bypass: Bypass): AdapterD
 
 class IssueMessageViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView) {
 
+    val number: TextView by bindView(R.id.number)
+    val title: TextView by bindView(R.id.issue_title)
+    val ownerAvatar: BezelImageView by bindView(R.id.owner_avatar)
+    val ownerName: TextView by bindView(R.id.owner_name)
+    val openDate: TextView by bindView(R.id.open_date)
+    val openedLabel: TextView by bindView(R.id.opened_label)
+    val labelContainer: FlowLayout by bindView(R.id.label_container)
     val text: TextView by bindView(R.id.text)
 
     companion object{
@@ -53,6 +65,18 @@ class IssueMessageViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView
     }
 
     fun bind(activity: Activity, issue: Issue, bypass: Bypass){
+        title.text = issue.title;
+        number.text = "#${issue.number}"
+        ownerName.text = issue.user.login
+        openDate.text = issue.updated_at?.githubTimeAgo()
+
+        labelContainer.removeAllViews()
+        issue.labels.map { LabelView(activity, it) }
+                .forEach {
+                    val lp: FlowLayout.LayoutParams  = FlowLayout.LayoutParams(dipToPx(4f), dipToPx(4f))
+                    labelContainer.addView(it, lp)
+                }
+
         text.text = bypass.markdownToSpannable(issue.body, text, { s, imageLoadingSpan ->
             Timber.i("Load markdown image: $s")
             Glide.with(activity)
@@ -62,6 +86,12 @@ class IssueMessageViewHolder(itemView: View?) : RecyclerView.ViewHolder(itemView
                     .into(ImageSpanTarget(text, imageLoadingSpan))
         })
         text.movementMethod = LinkMovementMethod.getInstance()
+
+        Glide.with(activity)
+                .load(issue.user.avatar_url)
+                .placeholder(R.drawable.dr_avatar_default)
+                .crossFade()
+                .into(ownerAvatar)
     }
 
 }
