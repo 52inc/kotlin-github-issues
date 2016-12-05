@@ -19,5 +19,6 @@
 
     <dimen name="editor_layout_elevation">10dp</dimen>
     <dimen name="editor_scrim_elevation">11dp</dimen>
+    <dimen name="headline">24sp</dimen>
 
 </resources>

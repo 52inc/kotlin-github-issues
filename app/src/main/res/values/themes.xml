@@ -7,7 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="popupMenuStyle">@style/Widget.AppCompat.Light.PopupMenu.Overflow</item>
+        <item name="popupMenuStyle">@style/Widget.GitIssues.Light.PopupMenu.Overflow</item>
     </style>
 
     <style name="Theme.GitIssues" parent="Base.Theme.GitIssues">
@@ -18,4 +18,9 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="Widget.GitIssues.Light.PopupMenu.Overflow" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <item name="android:dropDownHorizontalOffset">8dp</item>
+        <item name="android:dropDownVerticalOffset">-8dp</item>
+    </style>
+    
 </resources>

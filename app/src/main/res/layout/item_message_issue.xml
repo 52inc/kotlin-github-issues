@@ -27,7 +27,7 @@
             android:layout_centerVertical="true"
 
             tools:text="#16"
-            android:textSize="20sp"
+            android:textSize="@dimen/headline"
             android:fontFamily="sans-serif-medium"
             />
 
@@ -41,7 +41,7 @@
             android:layout_marginStart="@dimen/small_padding"
 
             tools:text="Cluster of related signup problems"
-            android:textSize="20sp"
+            android:textSize="@dimen/headline"
             android:textColor="?android:attr/textColorPrimary"
             android:fontFamily="sans-serif-medium"
             />
