@@ -127,7 +127,7 @@ class IssueMessengerActivity: BaseActivity(), IssueMessengerView, View.OnClickLi
             override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
                 val actionBarSize = UIUtils.getActionBarSize(this@IssueMessengerActivity).toFloat() / 2f
                 val percent = Utils.clamp(Math.abs(recyclerView?.computeVerticalScrollOffset()?.toFloat() ?: 0f), 0f, actionBarSize) / actionBarSize
-                val color = android.support.v4.graphics.ColorUtils.setAlphaComponent(Color.WHITE, (percent * 255).toInt())
+                val color = android.support.v4.graphics.ColorUtils.setAlphaComponent(color(R.color.colorPrimary), (percent * 255).toInt())
                 appbar.setBackgroundColor(color)
             }
         })

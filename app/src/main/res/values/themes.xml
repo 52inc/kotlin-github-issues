@@ -13,6 +13,10 @@
     <style name="Theme.GitIssues" parent="Base.Theme.GitIssues">
     </style>
 
+    <style name="Theme.GitIssues.Messenger" parent="Theme.GitIssues.Translucent">
+        <item name="android:colorBackground">@color/grey_200</item>
+    </style>
+
     <style name="Theme.GitIssues.Translucent">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
